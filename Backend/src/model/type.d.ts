@@ -1,17 +1,17 @@
 "use strict";
 declare global {
-
   // User
   interface UserModel {
     _id: Types.ObjectId;
     username: string;
     password: string;
-    firstName: string;
-    lastName: string;
+    firstName?: string;
+    lastName?: string;
     email: string;
-    address: string;
-    phoneNumber: string;
+    address?: string;
+    phoneNumber?: string;
     role: UserRole;
+    token: string
   }
 
   interface CartItem {

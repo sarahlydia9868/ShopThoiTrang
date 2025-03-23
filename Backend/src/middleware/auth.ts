@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import { NextFunction, Response } from "express";
-import User, { UserRole } from "../model/user";
+import User, {UserRole} from "../model/user";
 import sanitizedConfig from "../util/config";
 
 export interface RequestWithUser extends Request {

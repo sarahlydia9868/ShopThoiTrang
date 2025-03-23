@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/images/svg/logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fashion Store</title>
+</head>
+
+<body class="overflow-hidden">
+  <div class="loader-page flex justify-center items-center min-h-screen bg-white">
+    <div id="loader">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- End Loader Page -->
+  <div id="root"></div>
+
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.remove('overflow-hidden');
+      document.querySelector('.loader-page').classList.add('hidden');
+    });
+  </script>
+
+  <style>
+    #loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      margin-top: -9px;
+      margin-left: -100px;
+      perspective: 400px;
+      transform-style: preserve-3d;
+    }
+
+    #loader .dot {
+      animation: loader ease-in-out 3s infinite;
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      background-color: oklch(0.637 0.237 25.331);
+      position: absolute;
+    }
+
+    #loader .dot:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    #loader .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    #loader .dot:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+
+    #loader .dot:nth-child(5) {
+      animation-delay: 0.2s;
+    }
+
+    #loader .dot:nth-child(6) {
+      animation-delay: 0.1s;
+    }
+
+    #loader .dot:nth-child(7) {
+      animation-delay: 0s;
+    }
+
+    html:not(.ie) #loader .dot {
+      border: 2px solid #ffffff;
+    }
+
+    @keyframes loader {
+      15% {
+        transform: translateX(0);
+      }
+
+      45% {
+        transform: translateX(235px);
+      }
+
+      65% {
+        transform: translateX(235px);
+      }
+
+      95% {
+        transform: translateX(0);
+      }
+    }
+  </style>
+</body>
+
+
+</html>

@@ -1,0 +1,143 @@
+import { useEffect, useState } from "react";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import CategoryHeader from "../components/modules/CategoryHeader";
+import Button from "../components/modules/Button";
+import ProductTransportation from "../components/modules/ProductTransportation";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { LuShip } from "react-icons/lu";
+import { TbBox, TbTruckDelivery } from "react-icons/tb";
+import CartBox from "../components/CartBox";
+
+export interface ICart {
+  id: number;
+  name: string;
+  price: number;
+  images: [{ image: string }];
+  counter: number;
+}
+
+export default function Cart() {
+  const [cart, setCart] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  /*
+  useEffect(() => {
+    const localCartData = localStorage.getItem("cart");
+    const localCart = localCartData ? JSON.parse(localCartData) : [];
+    setCart(localCart);
+  }, []);
+
+  useEffect(calcTotalPrice, [cart]);
+    */
+  function calcTotalPrice() {
+    let price = 0;
+    if (cart.length) {
+      price = cart.reduce(
+        (prev, current: { price: number; counter: number }) =>
+          prev + current.price * current.counter,
+        0
+      );
+      setTotalPrice(price);
+    }
+  }
+
+  return (
+    <>
+      <NavBar />
+      <CategoryHeader label="Giỏ Hàng" path="giỏ hàng" />
+      <div className="container mx-auto flex justify-center items-start flex-wrap  gap-10 my-20">
+        <div className=" w-[50rem] overflow-x-scroll">
+          <div className="relative overflow-x-scroll px-2 ">
+            <table className="w-full">
+              <thead className="  text-zinc-700">
+                <tr>
+                  <th scope="col" className="text-start px-6 py-4">
+                    Sản Phẩm
+                  </th>
+                  <th scope="col" className="text-center px-6 py-4">
+                    Giá
+                  </th>
+                  <th scope="col" className="text-center px-6 py-4">
+                    Số lượng
+                  </th>
+                </tr>
+              </thead>
+              {cart.map((cart: ICart) => (
+                <CartBox key={cart.id} {...cart} />
+              ))}
+              <CartBox
+                name="Test"
+                id={0}
+                price={0}
+                counter={1}
+                images={[{ image: "images/product/product1.jpeg" }]}
+              ></CartBox>
+              <CartBox
+                name="Test1"
+                id={0}
+                price={0}
+                counter={1}
+                images={[{ image: "images/product/product2.jpeg" }]}
+              ></CartBox>
+              <CartBox
+                name="Test2"
+                id={0}
+                price={0}
+                counter={1}
+                images={[{ image: "images/product/product3.jpeg" }]}
+              ></CartBox>
+            </table>
+          </div>
+        </div>
+        <div className=" flex flex-col">
+          <span className=" font-bold text-lg mb-2">Tổng Sản Phẩm</span>
+          <div className="flex gap-8 flex-col p-7 border-1 border-black w-96 rounded-2xl hover:shadow-xl transition-all duration-500">
+            <div className=" text-center w-full">
+              <Button
+                padding="p-1 w-full"
+                text="Sử dụng mã giảm giá"
+                bgColor=""
+              />
+            </div>
+            <div className=" flex justify-between items-center  w-full">
+              <div className=" border-1 rounded-2xl border-black  p-3">
+                <ProductTransportation
+                  title="Miễn Phí"
+                  text="Vận Chuyển"
+                  icon={<TbTruckDelivery className=" text-4xl" />}
+                />
+              </div>
+              <div className="  border-1 rounded-2xl border-black p-3">
+                <ProductTransportation
+                  title="Hoàn Hàng"
+                  text="7 Ngày"
+                  icon={<TbBox className=" text-4xl" />}
+                />
+              </div>
+            </div>
+            <div>
+              <div className=" w-full flex justify-center items-center gap-1 border-t-1 py-5">
+                <IoCheckmarkDoneCircleOutline className=" text-green-600 text-2xl" />
+                <span className=" text-sm">
+                  Bạn sẽ tiết kiệm được 28.000đ 
+                </span>
+              </div>
+              <div className=" w-full flex justify-between items-center font-bold">
+                <span>Tổng</span>
+                <span className=" text-2xl">{totalPrice.toLocaleString('vi-VN')}đ</span>
+              </div>
+              <div className=" text-center mt-5">
+                <Button
+                  padding=" w-full p-2"
+                  text="Đặt Hàng"
+                  bgColor="black"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+}

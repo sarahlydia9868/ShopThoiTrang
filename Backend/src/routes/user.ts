@@ -5,13 +5,14 @@ import { admin, auth } from '../middleware/auth';
 const router = express.Router();
 
 router.route('/').get(userController.getUsersList); //TODO: set quyền truy cập admin
+router.route('/register').post(userController.register);
+router.route('/login').post(userController.login);
+router.route('/logout').get(userController.logout);
 router.route('/promote/:id').post(auth, admin, userController.promoteAdmin);
 router
-  .route('/:id')
+  .route('/user/:id')
   .get(userController.getUserBydId)
   .delete(auth, admin, userController.deleteUser)
   .put(auth, userController.updateUserProfile);
-router.route('/register').post(userController.register);
-router.route('/login').post(userController.login);
 
 export default router;
