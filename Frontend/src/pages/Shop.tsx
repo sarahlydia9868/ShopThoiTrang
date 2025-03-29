@@ -13,19 +13,28 @@ import TopUp from "../components/modules/TopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { ICollections } from "../components/AdminCollections";
+import { clearErrors } from "../actions/user";
+import { getProduct } from "../actions/product";
 
 interface IShop {
   label: string;
-  products: IProductBox[];
+  category: string;
 }
 
-export default function Shop({ label, products }: IShop) {
+export default function Shop({ label, category }: IShop) {
   const [isOpenFilter, setIsOpenFilter] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const allProducts = useSelector((state: RootState) => state.products);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [orderedProducts, setOrderedProducts] = useState<IProductBox[]>();
+  const { products, loading, error, resultPerPage } = useSelector((state: RootState) => state.products);
+  const keyword = "";
   const [status, setStatus] = useState<string>("all");
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+    }
+    dispatch(getProduct(keyword, currentPage, category));
+  }, [dispatch, keyword, currentPage, category, error]);
 
   return (
     <>
@@ -108,12 +117,10 @@ export default function Shop({ label, products }: IShop) {
             </div>
           </div>
           <div className=" flex justify-center items-start gap-5 flex-wrap">
-            {products?.map((product: IProductBox) => (
-              <ProductBox key={product.id} {...product} />
-            ))}
+            {products?.length === 0 ? <div className="py-50 text-red-500 text-3xl">Không có sản phẩm</div> : products?.map((product: ProductModel) => <ProductBox id={product._id} {...product} />)}
           </div>
           <div className=" flex justify-center lg:justify-between  items-center flex-wrap gap-10 w-full mt-10">
-            <span className=" text-sm text-center">Hiện thị 1–5 trên 50 sản phảm</span>
+            <span className=" text-sm text-center">{`Hiện thị 1–5 trên ${products?.length} sản phảm`}</span>
             <div className="">
               <span className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300">
                 Trước

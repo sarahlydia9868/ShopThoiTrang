@@ -13,7 +13,7 @@ import { useWindowDimensions } from "../utils/hooks";
 export default function Categories() {
   const { width } = useWindowDimensions();
   const screenWidth = width * 4 / 6;
-  const bannerHeight = Math.round(screenWidth / 2049 * 779);
+  const bannerHeight = Math.round(screenWidth / 2049 * 779) < 200 ? 200 : Math.round(screenWidth / 2049 * 779);
   return (
     <div
       data-aos="fade-up"
@@ -36,23 +36,23 @@ export default function Categories() {
           modules={[Autoplay, EffectCoverflow]}
           className="mySwiper h-full"
         >
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner1.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full" >
+            <img src="/images/banner/banner1.jpg"/>
           </SwiperSlide>
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner2.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full">
+            <img src="/images/banner/banner2.jpg"/>
           </SwiperSlide>
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner3.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full">
+            <img src="/images/banner/banner3.jpg"/>
           </SwiperSlide>
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner4.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full">
+            <img src="/images/banner/banner4.jpg"/>
           </SwiperSlide>
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner5.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full">
+            <img src="/images/banner/banner5.jpg"/>
           </SwiperSlide>
-          <SwiperSlide className="h-full">
-            <img src="/images/banner/banner6.jpg" className="h-full w-full object-cover" />
+          <SwiperSlide className="w-full">
+            <img src="/images/banner/banner6.jpg"/>
           </SwiperSlide>
         </Swiper>
       </div>

@@ -1,6 +1,14 @@
 import { ProductConstants } from "../../constans/product";
 
-const products = (state = { products: [] }, action) => {
+export interface IProductRoot {
+  loading?: boolean;
+  error?: boolean;
+  message?: string;
+  products?: ProductModel[];
+  resultPerPage?: number;
+}
+
+const products = (state = { products: [] }, action: { type: ProductConstants; payload?: ProductModel[]; resultPerPage?: number; message?: string }): IProductRoot => {
   switch (action.type) {
     case ProductConstants.ALL_PRODUCT_REQUEST:
     case ProductConstants.ADMIN_PRODUCT_REQUEST:
@@ -11,10 +19,8 @@ const products = (state = { products: [] }, action) => {
     case ProductConstants.ALL_PRODUCT_SUCCESS:
       return {
         loading: false,
-        products: action.payload.products,
-        productsCount: action.payload.productsCount,
-        resultPerPage: action.payload.resultPerPage,
-        filteredProductsCount: action.payload.filteredProductsCount,
+        products: action.payload,
+        resultPerPage: action.resultPerPage,
       };
 
     case ProductConstants.ADMIN_PRODUCT_SUCCESS:
@@ -27,19 +33,27 @@ const products = (state = { products: [] }, action) => {
     case ProductConstants.ADMIN_PRODUCT_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
     case ProductConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
     default:
       return state;
   }
 };
 
-const productDetails = (state = { product: {} }, action) => {
+export interface IProductDetailsRoot {
+  loading?: boolean;
+  error?: boolean;
+  message?: string;
+  product?: ProductModel;
+}
+
+const productDetails = (state = {}, action: { type: ProductConstants; payload?: ProductModel; message?: string }): IProductDetailsRoot => {
   switch (action.type) {
     case ProductConstants.PRODUCT_DETAILS_REQUEST:
       return {
@@ -54,12 +68,13 @@ const productDetails = (state = { product: {} }, action) => {
     case ProductConstants.PRODUCT_DETAILS_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
     case ProductConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
     default:
       return state;

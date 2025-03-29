@@ -1,28 +1,39 @@
-import orderConstans from "../../constans/order";
+import { OrderConstants } from "../../constans/order";
 
-const newOrder = (state = {}, action) => {
+export interface IOrderRoot {
+  loading?: boolean;
+  error?: boolean;
+  order?: OrderModel;
+  message?: string;
+  success?: boolean;
+}
+
+const newOrder = (state = {}, action: { type: OrderConstants; payload?: OrderModel; message?: string }): IOrderRoot => {
   switch (action.type) {
-    case orderConstans.CREATE_ORDER_REQUEST:
+    case OrderConstants.CREATE_ORDER_REQUEST:
       return {
         ...state,
         loading: true,
       };
 
-    case orderConstans.CREATE_ORDER_SUCCESS:
+    case OrderConstants.CREATE_ORDER_SUCCESS:
       return {
         loading: false,
         order: action.payload,
+        success: true,
+        message: action.message,
       };
 
-    case orderConstans.CREATE_ORDER_FAIL:
+    case OrderConstants.CREATE_ORDER_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
-    case orderConstans.CLEAR_ERRORS:
+    case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -30,28 +41,39 @@ const newOrder = (state = {}, action) => {
   }
 };
 
-const myOrders = (state = { orders: [] }, action) => {
+export interface IMyOrderRoot {
+  loading?: boolean;
+  error?: boolean;
+  orders?: OrderModel[];
+  message?: string;
+  success?: boolean;
+}
+
+const myOrders = (state = { orders: [] }, action: { type: OrderConstants; payload?: OrderModel[]; message?: string }): IMyOrderRoot => {
   switch (action.type) {
-    case orderConstans.MY_ORDERS_REQUEST:
+    case OrderConstants.MY_ORDERS_REQUEST:
       return {
         loading: true,
       };
 
-    case orderConstans.MY_ORDERS_SUCCESS:
+    case OrderConstants.MY_ORDERS_SUCCESS:
       return {
         loading: false,
+        success: true,
         orders: action.payload,
+        message: action.message,
       };
 
-    case orderConstans.MY_ORDERS_FAIL:
+    case OrderConstants.MY_ORDERS_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
-    case orderConstans.CLEAR_ERRORS:
+    case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -59,28 +81,38 @@ const myOrders = (state = { orders: [] }, action) => {
   }
 };
 
-const orderDetails = (state = { order: {} }, action) => {
+export interface IOrderDetailsRoot {
+  loading?: boolean;
+  error?: boolean;
+  order?: OrderModel;
+  message?: string;
+  success?: boolean;
+}
+
+const orderDetails = (state = { order: {} }, action: { type: OrderConstants; payload?: OrderModel; message?: string }) => {
   switch (action.type) {
-    case orderConstans.ORDER_DETAILS_REQUEST:
+    case OrderConstants.ORDER_DETAILS_REQUEST:
       return {
         loading: true,
       };
 
-    case orderConstans.ORDER_DETAILS_SUCCESS:
+    case OrderConstants.ORDER_DETAILS_SUCCESS:
       return {
         loading: false,
         order: action.payload,
+        message: action.message,
       };
 
-    case orderConstans.ORDER_DETAILS_FAIL:
+    case OrderConstants.ORDER_DETAILS_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
-    case orderConstans.CLEAR_ERRORS:
+    case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -89,25 +121,25 @@ const orderDetails = (state = { order: {} }, action) => {
 };
 
 // All Orders ------ Admin
-const allOrders = (state = { orders: [] }, action) => {
+const allOrders = (state = { orders: [] }, action: { type: OrderConstants; payload?: OrderModel; message?: string }) => {
   switch (action.type) {
-    case orderConstans.ALL_ORDERS_REQUEST:
+    case OrderConstants.ALL_ORDERS_REQUEST:
       return {
         loading: true,
       };
 
-    case orderConstans.ALL_ORDERS_SUCCESS:
+    case OrderConstants.ALL_ORDERS_SUCCESS:
       return {
         loading: false,
         orders: action.payload,
       };
 
-    case orderConstans.ALL_ORDERS_FAIL:
+    case OrderConstants.ALL_ORDERS_FAIL:
       return {
         loading: false,
         error: action.payload,
       };
-    case orderConstans.CLEAR_ERRORS:
+    case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
         error: null,
@@ -118,48 +150,48 @@ const allOrders = (state = { orders: [] }, action) => {
   }
 };
 
-const order = (state = {}, action) => {
+const order = (state = {}, action: { type: OrderConstants; payload?: OrderModel; message?: string }) => {
   switch (action.type) {
-    case orderConstans.UPDATE_ORDER_REQUEST:
-    case orderConstans.DELETE_ORDER_REQUEST:
+    case OrderConstants.UPDATE_ORDER_REQUEST:
+    case OrderConstants.DELETE_ORDER_REQUEST:
       return {
         ...state,
         loading: true,
       };
 
-    case orderConstans.UPDATE_ORDER_SUCCESS:
+    case OrderConstants.UPDATE_ORDER_SUCCESS:
       return {
         ...state,
         loading: false,
         isUpdated: action.payload,
       };
 
-    case orderConstans.DELETE_ORDER_SUCCESS:
+    case OrderConstants.DELETE_ORDER_SUCCESS:
       return {
         ...state,
         loading: false,
         isDeleted: action.payload,
       };
 
-    case orderConstans.UPDATE_ORDER_FAIL:
-    case orderConstans.DELETE_ORDER_FAIL:
+    case OrderConstants.UPDATE_ORDER_FAIL:
+    case OrderConstants.DELETE_ORDER_FAIL:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case orderConstans.UPDATE_ORDER_RESET:
+    case OrderConstants.UPDATE_ORDER_RESET:
       return {
         ...state,
         isUpdated: false,
       };
 
-    case orderConstans.DELETE_ORDER_RESET:
+    case OrderConstants.DELETE_ORDER_RESET:
       return {
         ...state,
         isDeleted: false,
       };
-    case orderConstans.CLEAR_ERRORS:
+    case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
         error: null,

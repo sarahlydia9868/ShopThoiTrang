@@ -4,7 +4,6 @@ import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
-import VerifyEmail from "./pages/VerifyEmail";
 import ContactUs from "./pages/ContactUs";
 import Cart from "./pages/Cart";
 import WishList from "./pages/WishList";
@@ -21,15 +20,20 @@ import ChangePassword from "./pages/Account/ChangePassword";
 import Payment from "./pages/Account/Payment";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Orders from "./pages/Dashboard/Orders";
+import OrdersDetail from "./pages/Dashboard/OrdersDetail";
 import ReturnRequest from "./pages/Dashboard/ReturnRequest";
+import OrderCancel from "./pages/Dashboard/OrderCancel";
 import Review from "./pages/Dashboard/Review";
-
+import ShippingAddress from "./pages/Account/ShippingAddress";
+import UserRoute from "./routes/UserRoute";
+import Checkout from "./pages/CheckOut";
+import OrderConfirmation from "./pages/OrderConfirmation";
+//TODO: change routes
 const routes = [
   { path: "/", element: <Index /> },
   { path: "/product/:productID", element: <ProductDetail /> },
   { path: "/login", element: <Login /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
-  { path: "/verify-email", element: <VerifyEmail /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/contact-us", element: <ContactUs /> },
   { path: "/wishlist", element: <WishList /> },
@@ -41,14 +45,25 @@ const routes = [
   { path: "/shop/quan", element: <QuanPC /> },
   { path: "/shop/chan-vay", element: <ChanVayPC /> },
   { path: "/shop/ao-khoac", element: <AoKhoacPC /> },
-  { path: "/account/profile", element: <Profile /> },
-  { path: "/account/address", element: <Address /> },
-  { path: "/account/change-password", element: <ChangePassword /> },
-  { path: "/account/payment", element: <Payment /> },
-  { path: "/dashboard/dashboard", element: <Dashboard /> },
-  { path: "/dashboard/orders", element: <Orders /> },
-  { path: "/dashboard/return-request", element: <ReturnRequest /> },
-  { path: "/dashboard/review", element: <Review /> },
+  { path: "/orders-cancel/:orderID", element: <OrderCancel /> },
+  { path: "/orders-confirmation/:orderID", element: <OrderConfirmation /> },
+  {
+    path: "/account/*",
+    element: <UserRoute />,
+    children: [
+      { path: "profile", element: <Profile /> },
+      { path: "address", element: <Address /> },
+      { path: "shipping-address", element: <ShippingAddress /> },
+      { path: "change-password", element: <ChangePassword /> },
+      { path: "payment", element: <Payment /> },
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "orders", element: <Orders /> },
+      { path: "check-out", element: <Checkout /> },
+      { path: "orders/:orderID", element: <OrdersDetail /> },
+      { path: "return-request", element: <ReturnRequest /> },
+      { path: "review", element: <Review /> },
+    ],
+  },
   { path: "*", element: <NotFound /> },
 ];
 

@@ -5,8 +5,6 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { HiBars3BottomRight } from "react-icons/hi2";
 import { RiHeart2Line } from "react-icons/ri";
 import { LiaTimesCircle } from "react-icons/lia";
-import { BiSolidUserCircle } from "react-icons/bi";
-import { PiUserCircleThin } from "react-icons/pi";
 import { IoIosSettings } from "react-icons/io";
 import { LuLayoutPanelLeft } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,12 +18,6 @@ import { AppDispatch, RootState } from "../redux/store";
 import { IUserRoot } from "../redux/reducers/user";
 import { logout } from "../actions/user";
 import { Logo } from "./Logo";
-
-enum UserRole {
-  Client = "Client",
-  Staff = "Staff",
-  Admin = "Admin",
-}
 
 export default function NavBar() {
   const dispatch = useDispatch<AppDispatch>();
@@ -66,7 +58,6 @@ export default function NavBar() {
     }, 1000);
     navigate("/", { replace: true });
   };
-
   return (
     <>
       <div className={` py-4 z-40 border-b-1 transition-all duration-300 ${openStickyNavbar && "bg-white sticky top-0"} `}>
@@ -90,40 +81,44 @@ export default function NavBar() {
               <Link to="/wishlist">
                 <div className=" relative cursor-pointer">
                   <RiHeart2Line className=" " />
-                  <span className=" absolute -right-4 bottom-3 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">5</span>
+                  <span className=" absolute -right-4 bottom-3 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">{user?.wishList.length ?? 0}</span>
                 </div>
               </Link>
               <Link to="/cart">
                 <div className=" relative cursor-pointer">
                   <MdOutlineShoppingCart className=" " />
-                  <span className=" absolute -right-4 bottom-3 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">5</span>
+                  <span className=" absolute -right-4 bottom-3 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">{user?.cartItems.length ?? 0}</span>
                 </div>
               </Link>
             </div>
             <div className=" flex justify-center items-center gap-5 ">
               {user ? (
                 <div className="relative group">
-                  <PiUserCircleThin className=" text-4xl cursor-pointer " />
+                  <img src={user?.avatarImage.url} alt="Profile" className="w-12 h-12 rounded-full " />
                   <div
                     className={` z-10  absolute top-full mt-4 right-0 invisible opacity-0 group-hover:opacity-100 group-hover:visible   ${
                       openStickyNavbar && "bg-white"
                     } transition-all duration-300 z-50 overflow-hidden text-zinc-800 bg-primary border-b border-b-purple-600 rounded-b-lg shadow-lg`}
                   >
-                    <div className="flex justify-start items-center gap-2 border-b-1 px-10 py-3">
-                      <BiSolidUserCircle className=" text-3xl " />
-                      <div className="flex justify-center items-start flex-col">
-                        <span className="text-sm font-bold">{user?.username}</span>
+                    <div className="flex justify-start gap-2 border-b-1 px-8 w-60 py-3">
+                      <img src={user?.avatarImage.url} alt="Profile" className="w-10 h-10 rounded-full " />
+                      <div className="flex justify-start items-start flex-col">
+                        <span className="text-sm font-bold">{user?.name ?? user.username}</span>
                         <span className="text-xs">{user?.email}</span>
                       </div>
                     </div>
-                    {user?.role === UserRole.Admin ? (
+                    {user?.isAdmin ? (
                       <Link to="/admin">
                         <NavBarOption title="Bảng quản trị" icon={<LuLayoutPanelLeft className="text-2xl" />} />
                       </Link>
                     ) : (
-                      <NavBarOption title="Thông tin người dùng" icon={<LuLayoutPanelLeft className="text-2x" />} />
+                      <Link to="/account/profile">
+                        <NavBarOption title="Thông tin người dùng" icon={<LuLayoutPanelLeft className="text-2x" />} />
+                      </Link>
                     )}
-                    <NavBarOption title="Cài đặt" icon={<IoIosSettings className=" text-2xl group-hover/setting:animate-spin" />} />
+                    <Link to="/account/dashboard">
+                      <NavBarOption title="Cài đặt" icon={<IoIosSettings className=" text-2xl group-hover/setting:animate-spin" />} />
+                    </Link>
                     <NavBarOption title="Đăng xuất" icon={<CgLogOff className="text-2xl" />} onClickHandler={openLogOutModal} />
                   </div>
                 </div>

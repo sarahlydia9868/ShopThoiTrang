@@ -1,40 +1,59 @@
 "use strict";
 declare global {
+  interface UserPayLoad {
+    message?: string;
+    data: UserModel;
+  }
+
+  interface Image {
+    public_id: string;
+    url: string;
+  }
+
+  interface ShippingAddress {
+    name: string;
+    phoneNumber: number;
+    province: string;
+    district: string;
+    commune: string;
+    specificAddress?: string;
+  }
 
   // User
   interface UserModel {
     _id: Types.ObjectId;
     username: string;
-    password: string;
-    firstName?: string;
-    lastName?: string;
+    password?: string;
+    name?: string;
     email: string;
-    address: string;
-    phoneNumber: string;
-    role: UserRole;
+    address?: ShippingAddress[];
+    birthdate?: string;
+    phoneNumber?: number;
+    isAdmin: boolean;
+    avatarImage: Image;
+    cartItems: CartItem[];
+    wishList: CartItem[];
   }
 
   interface CartItem {
-    name: string;
-    qty: number;
-    image: string;
     _id: Types.ObjectId;
-  }
-
-  interface AddressType {
-    address: string;
-    city: string;
-    postalCode: string;
-    country: string;
+    name: string;
+    price: number;
+    image: string;
+    color: string;
+    size: string;
+    qty: number;
   }
 
   // Order
   interface OrderModel {
+    _id: Types.ObjectId;
     user: Types.ObjectId;
     cartItems: CartItem[];
-    shippingAddress: AddressType;
+    shippingAddress: ShippingAddress;
     totalPrice: number;
     isPaid: boolean;
+    progress: string;
   }
 
   // Product
@@ -43,18 +62,36 @@ declare global {
     name: string;
     rating: number;
     comment: string;
+    time?: Date;
     user: Types.ObjectId;
   }
 
   interface ProductModel {
+    _id: Types.ObjectId;
     name: string;
-    image: string;
-    price: number;
-    category: string;
-    brand: string;
     description: string;
-    qty?: number;
+    collection?: {
+      name: string;
+      id: Types.ObjectId;
+    };
+    price: number;
+    offerPrice: number;
+    color: string[];
+    size: string[];
+    images: Image[];
+    ratings: number;
+    category: string;
+    qty: number;
     reviews: Review[];
+    buyCount: number;
+    createAt?: Date;
+  }
+
+  interface CollectionModel {
+    _id: Types.ObjectId;
+    title: string;
+    content: string;
+    images: Image[];
   }
 }
 

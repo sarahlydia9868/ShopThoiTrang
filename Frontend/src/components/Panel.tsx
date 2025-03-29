@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../redux/store";
 
 export default function Panel() {
+  const { user } = useSelector((state: RootState) => state.user);
   return (
     <div
       className="bg-white w-80 p-6 rounded-3xl border border-gray-300"
@@ -9,25 +12,25 @@ export default function Panel() {
       }}
     >
       <div className="flex flex-col items-center text-center mb-4">
-        <img src="/images/profile.jpg" alt="Profile" className="w-20 h-20 rounded-full mb-2 object-cover border-4" />
-        <h2 className="font-bold text-xl">Sarah Lydia</h2>
-        <p className="text-red-500">shopthoitrang@info.com</p>
+        <img src={user?.avatarImage.url} alt="Profile" className="w-20 h-20 rounded-full mb-2 object-cover border-4" />
+        <h2 className="font-bold text-xl">{user?.name ?? user?.username ?? "‎ "}</h2>
+        <p className="text-red-500">{user?.email ?? "‎ "}</p>
       </div>
       <div className="bg-[#fff7ee] px-4 py-2 rounded-md">
         <p className="font-semibold text-gray-500 uppercase ">Bảng Điều Khiển</p>
       </div>
       <ul className="mt-4 mb-6 mx-4 space-y-5">
         <li>
-          <Link to="/dashboard/dashboard">Bảng điều khiển</Link>
+          <Link to="/account/dashboard">Bảng điều khiển</Link>
         </li>
         <li>
-          <Link to="/dashboard/orders">Đơn hàng</Link>
+          <Link to="/account/orders">Đơn hàng</Link>
         </li>
         <li>
-          <Link to="/dashboard/return-request">Yêu cầu trả hàng</Link>
+          <Link to="/account/return-request">Yêu cầu trả hàng</Link>
         </li>
         <li>
-          <Link to="/dashboard/review">Đánh giá</Link>
+          <Link to="/account/review">Đánh giá</Link>
         </li>
       </ul>
       <div className="bg-[#fff7ee] px-4 py-2 rounded-md">

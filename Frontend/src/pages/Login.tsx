@@ -18,7 +18,6 @@ export default function Login() {
   const [toastAlertText, setToastAlertText] = useState<string>("");
   const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
   const [isToastAlertOK, setIsToastAlertOK] = useState<boolean>(false);
-
   const navigate = useNavigate();
   const loginSubmit = (e: any) => {
     e.preventDefault();
@@ -27,7 +26,7 @@ export default function Login() {
 
   const { error, loading, isAuthenticated, message } = useSelector((state: RootState) => state.user);
   useEffect(() => {
-    if (error) {
+    if (error && message) {
       dispatch(clearErrors());
       setIsToastAlertOK(false);
       setToastAlertText(message!);

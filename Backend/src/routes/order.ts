@@ -4,15 +4,9 @@ import { admin, auth } from "../middleware/auth";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(auth, admin, orderController.getOrderList)
-  .post(auth, orderController.createOrder);
-router.route("/orders-user").get(auth, orderController.getUserOrder);
-router
-  .route("/:id")
-  .get(auth, orderController.getOrderById)
-  .delete(auth, orderController.deleteOrder)
-  .put(auth, orderController.payOrder);
+router.route("/").get(auth, admin, orderController.getOrderList).post(auth, orderController.createOrder);
+router.route("/orders-user/").post(auth, orderController.getUserOrder);
+router.route("/get").post(auth, orderController.getOrderById);
+router.route("/delete").post(auth, orderController.deleteOrder).put(auth, orderController.payOrder);
 
 export default router;

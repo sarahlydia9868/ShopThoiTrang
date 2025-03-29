@@ -78,8 +78,18 @@ const user = (state = {}, action: { type: UserConstants; payload?: UserModel; me
   }
 };
 
+export interface IProfileRoot {
+  loading?: boolean;
+  isUpdated?: boolean;
+  isDeleted?: boolean;
+  isSendCoded?: boolean;
+  isVerifyCoded?: boolean;
+  error?: boolean;
+  message?: string;
+}
+
 // Update User
-export const profile = (state = {}, action) => {
+export const profile = (state = {}, action: { type: UserConstants; payload?: UserModel; message?: string }): IProfileRoot => {
   switch (action.type) {
     case UserConstants.UPDATE_PROFILE_REQUEST:
     case UserConstants.UPDATE_PASSWORD_REQUEST:
@@ -95,25 +105,29 @@ export const profile = (state = {}, action) => {
       return {
         ...state,
         loading: false,
-        isUpdated: action.payload,
+        isUpdated: true,
+        message: action.message,
       };
 
     case UserConstants.DELETE_USER_SUCCESS:
       return {
         ...state,
         loading: false,
-        isDeleted: action.payload.success,
-        message: action.payload.message,
+        isDeleted: true,
+        message: action.message,
       };
 
     case UserConstants.UPDATE_PROFILE_FAIL:
     case UserConstants.UPDATE_PASSWORD_FAIL:
     case UserConstants.UPDATE_USER_FAIL:
     case UserConstants.DELETE_USER_FAIL:
+      case UserConstants.SEND_CODE_FAIL:
+    case UserConstants.VERIFY_CODE_FAIL:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
 
     case UserConstants.UPDATE_PROFILE_RESET:
@@ -121,7 +135,8 @@ export const profile = (state = {}, action) => {
     case UserConstants.UPDATE_USER_RESET:
       return {
         ...state,
-        isUpdated: false,
+        isUpdated: true,
+        message: action.message,
       };
 
     case UserConstants.DELETE_USER_RESET:
@@ -130,10 +145,25 @@ export const profile = (state = {}, action) => {
         isDeleted: false,
       };
 
+    case UserConstants.SEND_CODE_SUCCESS:
+      return {
+        ...state,
+        isSendCoded: true,
+        message: action.message,
+      };
+    case UserConstants.VERIFY_CODE_SUCCESS:
+      return {
+        ...state,
+        isVerifyCoded: true,
+        message: action.message,
+      };
     case UserConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
+        isUpdated: false,
+        isDeleted: false,
+        message: undefined,
       };
 
     default:

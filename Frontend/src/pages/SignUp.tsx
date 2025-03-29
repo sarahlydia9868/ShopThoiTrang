@@ -28,7 +28,7 @@ export default function SignUp() {
 
   const { error, loading, isAuthenticated, message } = useSelector((state: RootState) => state.user);
   useEffect(() => {
-    if (error) {
+    if (error && message) {
       dispatch(clearErrors());
       setIsToastAlertOK(false);
       setToastAlertText(message!);
