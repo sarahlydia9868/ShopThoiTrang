@@ -82,4 +82,11 @@ npm run build
 
 ---
 
-## 🎨 Pages
+## 🎨 Hình ảnh giao diện
+### **Trang chính**
+![image](https://github.com/user-attachments/assets/bf4a2f32-bf52-4d29-93c4-f85bbf55e901)
+![image](https://github.com/user-attachments/assets/3aadcd97-9316-4f89-8540-45890739d94c)
+![image](https://github.com/user-attachments/assets/e709c152-e777-41ef-942b-f05261156107)
+
+---
+
