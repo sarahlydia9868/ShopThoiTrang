@@ -51,7 +51,7 @@ README này mô tả các **API endpoints** cho **Shop Thời Trang**, bao gồm
   ```json
   { "message": "Đăng ký thành công" }
 
-  ### POST /api/users/login
+### POST /api/users/login
 - **Mục đích:** Đăng nhập tài khoản.
 
 - **Yêu cầu:** Không cần xác thực.
