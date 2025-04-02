@@ -61,7 +61,7 @@ README này mô tả các **API endpoints** cho **Shop Thời Trang**, bao gồm
 
 - **Yêu cầu:** Không cần xác thực.
 
-###🚪 GET /api/users/logout
+### 🚪 GET /api/users/logout
 - **Mục đích:** Đăng xuất tài khoản.
 
 ### 🛡️ POST /api/users/promote
