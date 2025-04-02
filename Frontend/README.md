@@ -139,3 +139,14 @@ npm run build
 ---
 ## **404 NotFound**
 ![image](https://github.com/user-attachments/assets/0a340b4f-5299-46c5-b875-4dd722fa6a7b)
+
+---
+## **Bảng quản trị**
+![image](https://github.com/user-attachments/assets/b97baba9-c913-4696-9293-ebb0199fccdd)
+![image](https://github.com/user-attachments/assets/8fee8ecb-5db9-4f15-9ec2-56d0ec13a910)
+![image](https://github.com/user-attachments/assets/53276428-66b9-458e-a982-151a6f14fcb6)
+![image](https://github.com/user-attachments/assets/9e0f8747-2616-4f8b-991c-7214b1c56a57)
+![image](https://github.com/user-attachments/assets/997c0510-0302-43a2-b0a5-ff8cca020298)
+![image](https://github.com/user-attachments/assets/ff08bcc4-0844-44df-aa9a-8a97571aa3f9)
+
+
