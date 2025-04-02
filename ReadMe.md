@@ -93,4 +93,4 @@ npm start
 ```
 
 ### 🎥 Video DEMO
-
+![demo](https://github.com/user-attachments/assets/f5f22c79-8b83-4a25-b013-394604550e89)
