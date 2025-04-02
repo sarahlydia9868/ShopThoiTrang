@@ -30,7 +30,7 @@ export default function AdminCollections() {
 
   const { collections } = useSelector((state: RootState) => state.collections) as ICollectionRoot;
   const { error, success, message } = useSelector((state: RootState) => state.newCollection) as INewCollectionRoot;
-  const { isDeleted} = useSelector((state: RootState) => state.deleteCollection) as IDeleteCollectionRoot;
+  const { isDeleted } = useSelector((state: RootState) => state.deleteCollection) as IDeleteCollectionRoot;
   const dispatch = useDispatch<AppDispatch>();
 
   const clearInput = () => {
@@ -38,7 +38,7 @@ export default function AdminCollections() {
     setTitleContent("");
     setImages([]);
     setContent("");
-  }
+  };
 
   useEffect(() => {
     if (success && message) {
@@ -47,28 +47,34 @@ export default function AdminCollections() {
       setIsOpenToastAlert(!isOpenToastAlert);
       clearInput();
       dispatch(getAllCollection());
+      clearErrors();
       setTimeout(() => {
         setIsOpenToastAlert(false);
       }, 3000);
+      return;
     }
     if (isDeleted) {
       setIsOkToastAlert(true);
       setToastAlertText("Đã xoá bộ sưu tập");
       setIsOpenToastAlert(!isOpenToastAlert);
       dispatch(getAllCollection());
+
+      clearErrors();
       setTimeout(() => {
-        
         setIsOpenToastAlert(false);
       }, 3000);
+      return;
     }
-    clearErrors();
-    dispatch(getAllCollection());
   }, [dispatch, getAllCollection, clearInput, error, success, message, isDeleted]);
+
+  useEffect(() => {
+    dispatch(getAllCollection());
+  }, [dispatch, getAllCollection]);
 
   const addNewCollection = (e: any) => {
     e.preventDefault();
 
-    if (title === ""  || content === "") {
+    if (title === "" || content === "") {
       setIsOkToastAlert(false);
       setToastAlertText("Vui lòng nhập đủ tiêu đề, nội dung");
       setIsOpenToastAlert(true);
