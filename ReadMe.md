@@ -70,3 +70,27 @@ npm start
 - **🔒 Bảo mật**: Xác thực thay đổi mật khẩu qua email.
 
 🌟 Trải nghiệm mua sắm trực tuyến thế hệ mới với nền tảng thương mại điện tử đầy đủ tính năng của chúng tôi!
+
+### 🧑‍💻 Tài khoản DEMO
+- **Admin**
+```
+ username=sarahlydia
+ password=sarah123
+```
+```
+ username=admin
+ password=admin123
+```
+-- **User**
+```
+ username=testaccount
+ username=matkhau123
+```
+
+```
+ username=nguoidung7
+ username=matkhau123
+```
+
+### 🎥 Video DEMO
+
