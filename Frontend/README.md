@@ -116,26 +116,26 @@ npm run build
 ![image](https://github.com/user-attachments/assets/f4e73c47-49c5-4727-a358-33f4d00b6e53)
 ![image](https://github.com/user-attachments/assets/4fbbe03d-819e-4417-be66-782e92a8adb6)
 
---
+---
 ## **Đơn hàng**
 ![image](https://github.com/user-attachments/assets/839811b3-4db6-4d3c-954f-bc951433ecd2)
 ![image](https://github.com/user-attachments/assets/d881ccaf-3ea7-4003-822b-59d0fc2b16e7)
 ![image](https://github.com/user-attachments/assets/73ea02af-ec6f-48a6-84eb-9f7c134d872d)
 ![image](https://github.com/user-attachments/assets/4409b086-b048-4ac0-b368-7960ec3558ef)
 
---
+---
 ## **Danh sách yêu thích**
 ![image](https://github.com/user-attachments/assets/1827c4a6-2055-4c76-820e-902d23d36232)
 
---
+---
 ## **Giỏ hàng**
 ![image](https://github.com/user-attachments/assets/ccfd85e3-c71d-4a12-b7af-b5e7d027a854)
 
---
+---
 ## **Thanh toán**
 ![image](https://github.com/user-attachments/assets/d2beed77-a73a-4a3c-9ee3-5441ce0fc808)
 ![image](https://github.com/user-attachments/assets/cc891592-60eb-43f2-be46-d51839044b35)
 
---
+---
 ## **404 NotFound**
 ![image](https://github.com/user-attachments/assets/0a340b4f-5299-46c5-b875-4dd722fa6a7b)
