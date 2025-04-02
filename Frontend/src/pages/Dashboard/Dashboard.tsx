@@ -9,26 +9,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { IUserRoot } from "../../redux/reducers/user";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "../../actions/user";
 import Modal from "../../components/modules/Modal";
+import { IMyOrderRoot } from "../../redux/reducers/order";
 
 export default function Dashboard() {
-  // Dữ liệu giả lập, trong thực tế sẽ fetch từ API
-  const userName = "Sarah Lydia";
-  const totalOrder = 30;
-  const totalPending = 4;
-  const totalWishlist = 12;
 
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.user) as IUserRoot;
+  const { orders } = useSelector((state: RootState) => state.myOrder) as IMyOrderRoot;
+  const [pendingOrders, setPendingOrders] = useState<number>(0);
   const navigate = useNavigate();
 
-  const [openStickyNavbar, setOpenStickyNavbar] = useState<boolean>(false);
-  const [isOpenSideBar, setIsOpenSideBar] = useState<boolean>(false);
-
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [toastAlertText, setToastAlertText] = useState<string>("");
+  const [_, setToastAlertText] = useState<string>("");
   const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
 
   const openLogOutModal = () => {
@@ -37,6 +32,16 @@ export default function Dashboard() {
 
   const closeModal = () => {
     setIsOpenModal(false);
+  };
+
+  const totalPendingOrders = () => {
+    let pendingOrders = 0;
+    for (const order of orders!) {
+      if (order.progress === "Đang giao hàng") {
+        ++pendingOrders;
+      }
+    }
+    setPendingOrders(pendingOrders);
   };
 
   const confirmModal = () => {
@@ -50,6 +55,11 @@ export default function Dashboard() {
     navigate("/", { replace: true });
   };
 
+  
+  useEffect(() => {
+    totalPendingOrders();
+  });
+
   return (
     <div className="min-h-screen">
       <NavBar />
@@ -62,7 +72,7 @@ export default function Dashboard() {
               {/* Lời chào & liên kết đăng xuất */}
               <div className="mb-4">
                 <h1 className="text-xl font-bold">
-                  Xin chào {userName} (không phải {userName}?{" "}
+                  Xin chào {user?.name ?? user?.username} (không phải {user?.name ?? user?.username}?{" "}
                   <button className="text-red-500 hover:underline" onClick={openLogOutModal}>
                     Đăng xuất
                   </button>
@@ -94,7 +104,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <p>Tổng đơn hàng</p>
-                  <p className=" text-3xl font-bold">{totalOrder}</p>
+                  <p className=" text-3xl font-bold">{orders?.length}</p>
                 </div>
                 <div className="hover:bg-red-500 hover:text-white after:transition-all after:ease-in-out after:duration-500 transition-all duration-300 bg-white border border-gray-200 rounded-lg px-6 py-6 flex flex-col">
                   <div className="flex items-center gap-3 mb-6">
@@ -103,7 +113,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <p>Tổng đơn hàng đang giao</p>
-                  <p className=" text-3xl font-bold">{totalPending}</p>
+                  <p className=" text-3xl font-bold">{pendingOrders}</p>
                 </div>
                 <div className="hover:bg-red-500 hover:text-white after:transition-all after:ease-in-out after:duration-500 transition-all duration-300 bg-white border border-gray-200 rounded-lg px-6 py-6 flex flex-col">
                   <div className="flex items-center gap-3 mb-6">
@@ -112,7 +122,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <p>Danh sách yêu thích</p>
-                  <p className=" text-3xl font-bold">{totalWishlist}</p>
+                  <p className=" text-3xl font-bold">{user?.wishList.length}</p>
                 </div>
               </div>
             </div>

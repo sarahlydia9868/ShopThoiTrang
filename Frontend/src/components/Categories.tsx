@@ -3,11 +3,6 @@ import "swiper/css";
 import "swiper/css/effect-creative";
 import { Autoplay, EffectCoverflow } from "swiper/modules";
 import SpinnerIcon from "./modules/SpinnerIcon";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../redux/store";
-import { ICollections } from "./AdminCollections";
-import Box from "./Box";
 import { useWindowDimensions } from "../utils/hooks";
 
 export default function Categories() {

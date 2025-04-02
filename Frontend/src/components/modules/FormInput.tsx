@@ -69,11 +69,11 @@ export default function FormInput({ label, type, placeholder, value, onChange }:
   ) : type === "file" ? (
     <label htmlFor="file" className="flex justify-center items-start flex-col gap-1 w-full">
       <span style={{ fontWeight: "bold" }}>{label}</span>
-      <span className="flex justify-center items-center gap-3 w-full p-3 hover:bg-primary transition-colors duration-500 rounded-lg font-bold text-zinc-600 hover:text-black text-center cursor-pointer ">
+      <span className="border-1 border-black flex justify-center items-center gap-3 w-full p-3 hover:bg-primary transition-colors duration-500 rounded-lg font-bold text-zinc-600 hover:text-black text-center cursor-pointer  bg-white">
         <IoIosCloudUpload className=" text-xl" />
         Tải hình ảnh
       </span>
-      <input type={type} id="file" min={0} placeholder={placeholder} className="hidden" onChange={onChange} multiple />
+      <input type={type} name="image" accept="image/*" id="file" min={0} placeholder={placeholder} className="hidden" onChange={onChange} multiple />
     </label>
   ) : (
     <label htmlFor="email" className="flex justify-center  items-start flex-col gap-1 w-full">

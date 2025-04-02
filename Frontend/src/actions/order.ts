@@ -1,6 +1,5 @@
 import axios from "axios";
 import { OrderConstants } from "../constans/order";
-import { UserConstants } from "../constans/user";
 
 // Create Order
 export const createOrder =
@@ -14,7 +13,7 @@ export const createOrder =
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axios.post("/api/orders/", { cartItems, shippingAddress, totalPrice, id }, config);
+      const { data } = await axios.post("/api/orders/create-order", { cartItems, shippingAddress, totalPrice, id }, config);
       dispatch({ type: OrderConstants.CREATE_ORDER_SUCCESS, payload: data.data, message: data.message });
     } catch (error: any) {
       dispatch({
@@ -68,9 +67,9 @@ export const getAllOrders = () => async (dispatch: (arg0: { type: OrderConstants
   try {
     dispatch({ type: OrderConstants.ALL_ORDERS_REQUEST });
 
-    const { data } = await axios.get("/api/v2/admin/orders");
+    const { data } = await axios.get("/api/orders");
 
-    dispatch({ type: OrderConstants.ALL_ORDERS_SUCCESS, payload: data.orders });
+    dispatch({ type: OrderConstants.ALL_ORDERS_SUCCESS, payload: data.data, message: data.message });
   } catch (error: any) {
     dispatch({
       type: OrderConstants.ALL_ORDERS_FAIL,
@@ -80,7 +79,7 @@ export const getAllOrders = () => async (dispatch: (arg0: { type: OrderConstants
 };
 
 // Update Order
-export const updateOrder = (id, order) => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
+export const updateOrder = (id: string, progress: string) => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
   try {
     dispatch({ type: OrderConstants.UPDATE_ORDER_REQUEST });
 
@@ -89,7 +88,7 @@ export const updateOrder = (id, order) => async (dispatch: (arg0: { type: OrderC
         "Content-Type": "application/json",
       },
     };
-    const { data } = await axios.put(`/api/v2/admin/order/${id}`, order, config);
+    const { data } = await axios.post(`/api/orders/update-progress`, {id, progress}, config);
 
     dispatch({ type: OrderConstants.UPDATE_ORDER_SUCCESS, payload: data.success });
   } catch (error: any) {
@@ -105,7 +104,7 @@ export const deleteOrder = (id) => async (dispatch: (arg0: { type: OrderConstant
   try {
     dispatch({ type: OrderConstants.DELETE_ORDER_REQUEST });
 
-    const { data } = await axios.delete(`/api/v2/admin/order/${id}`);
+    const { data } = await axios.delete(`/api/orders/${id}`);
 
     dispatch({ type: OrderConstants.DELETE_ORDER_SUCCESS, payload: data.success });
   } catch (error: any) {
@@ -117,6 +116,6 @@ export const deleteOrder = (id) => async (dispatch: (arg0: { type: OrderConstant
 };
 
 // Clearing Errors
-export const clearErrors = () => async (dispatch: (arg0: { type: UserConstants; payload?: OrderModel; message?: string }) => void) => {
-  dispatch({ type: UserConstants.CLEAR_ERRORS });
+export const clearErrors = () => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
+  dispatch({ type: OrderConstants.CLEAR_ERRORS });
 };

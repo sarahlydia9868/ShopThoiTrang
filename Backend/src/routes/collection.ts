@@ -4,7 +4,9 @@ import { admin, auth } from "../middleware/auth";
 
 const router = express.Router();
 
-router.route("/").get(auth, admin, collectionController.getCollectionList);
-router.route("/:id").get(auth, collectionController.getCollectionById);
+router.route("/").get(collectionController.getCollectionList);
+router.route("/:id").get(collectionController.getCollectionById);
+router.route("/delete").post(auth, admin, collectionController.deleteCollection);
+router.route("/new").post(auth, admin, collectionController.createCollection);
 
 export default router;

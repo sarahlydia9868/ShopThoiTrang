@@ -5,10 +5,11 @@ export interface IProductRoot {
   error?: boolean;
   message?: string;
   products?: ProductModel[];
-  resultPerPage?: number;
+  productsCount?: number;
+  currentCount?: number;
 }
 
-const products = (state = { products: [] }, action: { type: ProductConstants; payload?: ProductModel[]; resultPerPage?: number; message?: string }): IProductRoot => {
+const products = (state = { products: [] }, action: { type: ProductConstants; payload?: ProductModel[]; productsCount?: number;  currentCount?: number; message?: string }): IProductRoot => {
   switch (action.type) {
     case ProductConstants.ALL_PRODUCT_REQUEST:
     case ProductConstants.ADMIN_PRODUCT_REQUEST:
@@ -20,7 +21,8 @@ const products = (state = { products: [] }, action: { type: ProductConstants; pa
       return {
         loading: false,
         products: action.payload,
-        resultPerPage: action.resultPerPage,
+        productsCount: action.productsCount,
+        currentCount: action.currentCount
       };
 
     case ProductConstants.ADMIN_PRODUCT_SUCCESS:
@@ -115,8 +117,16 @@ const newReview = (state = {}, action) => {
   }
 };
 
+
+export interface INewProductRoot {
+  loading?: boolean;
+  error?: boolean;
+  message?: string;
+  success?: boolean;
+}
+
 // New Product ----Admin
-const newProduct = (state = { product: {} }, action) => {
+const newProduct = (state = { }, action: { type: ProductConstants; message?: string }): INewProductRoot => {
   switch (action.type) {
     case ProductConstants.NEW_PRODUCT_REQUEST:
       return {
@@ -126,14 +136,15 @@ const newProduct = (state = { product: {} }, action) => {
     case ProductConstants.NEW_PRODUCT_SUCCESS:
       return {
         loading: false,
-        success: action.payload.success,
-        product: action.payload.product,
+        success: true,
+        message: action.message,
       };
     case ProductConstants.NEW_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
     case ProductConstants.NEW_PRODUCT_RESET:
       return {
@@ -143,15 +154,24 @@ const newProduct = (state = { product: {} }, action) => {
     case ProductConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
+        message: action.message,
       };
     default:
       return state;
   }
 };
 
+export interface IDeleteProductRoot {
+  loading?: boolean;
+  error?: boolean;
+  message?: string;
+  isDeleted?: boolean;
+}
+
+
 // Delete Product
-const deleteProduct = (state = {}, action) => {
+const deleteProduct = (state = {}, action:  { type: ProductConstants; message?: string }) => {
   switch (action.type) {
     case ProductConstants.DELETE_PRODUCT_REQUEST:
     case ProductConstants.UPDATE_PRODUCT_REQUEST:
@@ -163,36 +183,35 @@ const deleteProduct = (state = {}, action) => {
       return {
         ...state,
         loading: false,
-        isDeleted: action.payload,
+        isDeleted: true,
+        message: action.message,
       };
 
     case ProductConstants.UPDATE_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
-        isUpdated: action.payload,
+        isUpdated: true,
+        message: action.message,
       };
     case ProductConstants.DELETE_PRODUCT_FAIL:
     case ProductConstants.UPDATE_PRODUCT_FAIL:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
     case ProductConstants.DELETE_PRODUCT_RESET:
       return {
         ...state,
         isDeleted: false,
-      };
-    case ProductConstants.UPDATE_PRODUCT_RESET:
-      return {
-        ...state,
-        isUpdated: false,
+        message: action.message,
       };
     case ProductConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
     default:
       return state;

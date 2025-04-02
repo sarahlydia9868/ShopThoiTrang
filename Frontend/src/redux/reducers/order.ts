@@ -120,8 +120,16 @@ const orderDetails = (state = { order: {} }, action: { type: OrderConstants; pay
   }
 };
 
+export interface IOrdersRoot {
+  loading?: boolean;
+  error?: boolean;
+  orders?: OrderModel[];
+  message?: string;
+  success?: boolean;
+}
+
 // All Orders ------ Admin
-const allOrders = (state = { orders: [] }, action: { type: OrderConstants; payload?: OrderModel; message?: string }) => {
+const allOrders = (state = { orders: [] }, action: { type: OrderConstants; payload?: OrderModel[]; message?: string }): IOrdersRoot => {
   switch (action.type) {
     case OrderConstants.ALL_ORDERS_REQUEST:
       return {
@@ -131,18 +139,20 @@ const allOrders = (state = { orders: [] }, action: { type: OrderConstants; paylo
     case OrderConstants.ALL_ORDERS_SUCCESS:
       return {
         loading: false,
+        success: true,
         orders: action.payload,
+        message: action.message
       };
 
     case OrderConstants.ALL_ORDERS_FAIL:
       return {
         loading: false,
-        error: action.payload,
+        error: true,
       };
     case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -150,7 +160,14 @@ const allOrders = (state = { orders: [] }, action: { type: OrderConstants; paylo
   }
 };
 
-const order = (state = {}, action: { type: OrderConstants; payload?: OrderModel; message?: string }) => {
+export interface IUpdateOrderRoot {
+  loading?: boolean,
+  isUpdated?: boolean,
+  isDeleted?: boolean,
+  error?: boolean
+}
+
+const updateOrder = (state = {}, action: { type: OrderConstants; payload?: OrderModel; message?: string }): IUpdateOrderRoot => {
   switch (action.type) {
     case OrderConstants.UPDATE_ORDER_REQUEST:
     case OrderConstants.DELETE_ORDER_REQUEST:
@@ -163,14 +180,14 @@ const order = (state = {}, action: { type: OrderConstants; payload?: OrderModel;
       return {
         ...state,
         loading: false,
-        isUpdated: action.payload,
+        isUpdated: true,
       };
 
     case OrderConstants.DELETE_ORDER_SUCCESS:
       return {
         ...state,
         loading: false,
-        isDeleted: action.payload,
+        isDeleted: true,
       };
 
     case OrderConstants.UPDATE_ORDER_FAIL:
@@ -178,7 +195,7 @@ const order = (state = {}, action: { type: OrderConstants; payload?: OrderModel;
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: true,
       };
     case OrderConstants.UPDATE_ORDER_RESET:
       return {
@@ -194,7 +211,7 @@ const order = (state = {}, action: { type: OrderConstants; payload?: OrderModel;
     case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -207,5 +224,5 @@ export default {
   myOrders,
   orderDetails,
   allOrders,
-  order,
+  updateOrder,
 };

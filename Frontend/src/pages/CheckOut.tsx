@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CategoryHeader from "../components/modules/CategoryHeader";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import Button from "../components/modules/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { IUserRoot } from "../redux/reducers/user";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import ToastAlert from "../components/modules/ToastAlert";
-import { IOrderRoot } from "../redux/reducers/order";
 import { clearErrors, createOrder } from "../actions/order";
 import { updateItems } from "../actions/user";
 
@@ -19,25 +17,41 @@ export default function CheckOut() {
   const [toastAlertText, setToastAlertText] = useState<string>("");
   const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
   const [isToastAlertOK, setIsToastAlertOK] = useState<boolean>(false);
-  const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.user) as IUserRoot;
 
-  const { order, message, success } = useSelector((state: RootState) => state.order) as IOrderRoot;
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state: RootState) => state.user);
+  const { order, message, success } = useSelector((state: RootState) => state.order);
+
   const address = user?.address;
   const cart = user?.cartItems ?? [];
 
   const [shipping, setShipping] = useState<number>(0);
   const [payment, setPayment] = useState<string>("Thanh toán khi nhận hàng");
-  function calcTotalPrice() {
+
+  const calcTotalPrice = useCallback(() => {
     if (cart.length) {
       const tPrice = cart.reduce((total, item) => total + item.price * item.qty, 0) + shipping;
       setTotalPrice(tPrice);
+    } else {
+      setTotalPrice(0);
     }
-  }
+  }, [cart, shipping]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    calcTotalPrice();
+  }, [calcTotalPrice]);
 
-  const submit = (e: any) => {
+  useEffect(() => {
+    if (success && message) {
+      dispatch(clearErrors());
+      dispatch(updateItems(user?._id, [], user?.wishList!));
+      navigate(`/account/order-confirmation/${order?._id}`);
+    }
+  }, [success, message, dispatch, navigate, order?._id]);
+
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (indexAddress === -1) {
       setIsToastAlertOK(false);
@@ -51,35 +65,20 @@ export default function CheckOut() {
     dispatch(createOrder(cart, address![shipping], totalPrice, user?._id));
   };
 
-  useEffect(() => {
-    calcTotalPrice();
-    if (success && message) {
-      setIsToastAlertOK(true);
-      setToastAlertText(message!);
-      setOpenToastAlert(!openToastAlert);
-      dispatch(updateItems(user?._id!, [], user?.wishList!));
-      navigate(`/orders-confirmation/${order?._id}`);
-      setTimeout(() => {
-        dispatch(clearErrors());
-        setOpenToastAlert(false);
-      }, 1000);
-    }
-  }, [dispatch, calcTotalPrice]);
-
   return (
     <>
       <NavBar />
       <CategoryHeader label="Thanh Toán" path="Thanh toán" />
-      <div className="container mx-auto flex justify-center items-start flex-wrap  gap-10 my-20">
-        <div className=" flex-1/2">
-          <div className={`grid grid-cols-1  ${address?.length === 0 ? "-mt-20" : "md:grid-cols-2"} gap-6`}>
+      <div className="container mx-auto flex justify-center items-start flex-wrap gap-10 my-20">
+        <div className="flex-1/2">
+          <div className={`grid grid-cols-1 ${address?.length === 0 ? "-mt-20" : "md:grid-cols-2"} gap-6`}>
             {address?.length === 0 ? (
               <div className="mx-5 flex-1 p-8 mt-20">
-                <p className="text-gray-600 ">Chưa có địa chỉ giao hàng bạn cần thêm địa chỉ trước.</p>
+                <p className="text-gray-600">Chưa có địa chỉ giao hàng, bạn cần thêm địa chỉ trước.</p>
               </div>
             ) : (
               address?.map((shippingAddres: ShippingAddress, index: number) => (
-                <div className={`border p-4 rounded-xl px-10 bg-white ${indexAddress === index ? "border-red-500 " : "border-gray-300 "}`}>
+                <div key={index} className={`border p-4 rounded-xl px-10 bg-white ${indexAddress === index ? "border-red-500" : "border-gray-300"}`}>
                   <h2 className="text-lg font-semibold mb-2">Địa chỉ giao hàng</h2>
                   <p>{shippingAddres.name}</p>
                   <p>Sđt: {shippingAddres.phoneNumber}</p>
@@ -98,24 +97,23 @@ export default function CheckOut() {
             <div className="bg-red-500 text-white w-20 h-20 rounded-full flex items-center justify-center mb-4">
               <BsFillHouseAddFill className="w-8 h-8" />
             </div>
-
             <p className="text-xl font-semibold mb-4">Thêm địa chỉ mới</p>
             <Link to="/account/shipping-address">
               <Button text="Thêm" padding="px-4 py-2" />
             </Link>
           </div>
         </div>
-        <div className=" flex-1/3 flex-col w-120">
-          <span className=" font-bold text-lg mb-2">Đơn Hàng Của Bạn</span>
+        <div className="flex-1/3 flex-col w-120">
+          <span className="font-bold text-lg mb-2">Đơn Hàng Của Bạn</span>
           <div className="flex gap-8 flex-col p-7 border-1 border-black w-120 mt-6 rounded-2xl hover:shadow-xl transition-all duration-500">
             <div className="space-y-4">
               {cart.map((item, index) => (
                 <div key={index} className="flex items-center gap-4 border-b border-gray-200">
                   <img src={item.image} alt={item.name} className="max-h-20 rounded-xl mb-4" />
-                  <div className="flex-1 font-bold ">
+                  <div className="flex-1 font-bold">
                     <p>{item.name}</p>
                   </div>
-                  <p className="">{item.price.toLocaleString("vi-VN")}đ</p>
+                  <p>{item.price.toLocaleString("vi-VN")}đ</p>
                 </div>
               ))}
             </div>
@@ -130,8 +128,8 @@ export default function CheckOut() {
                 Vận chuyển hoả tốc: 35.000đ
               </div>
             </div>
-            <p className="flex justify-between ">
-              Tổng<span>{totalPrice.toLocaleString("vi-VN")}đ</span>
+            <p className="flex justify-between">
+              Tổng <span>{totalPrice.toLocaleString("vi-VN")}đ</span>
             </p>
             <div className="border-1 border-gray-200"></div>
             <h2 className="text-lg font-semibold mb-2">Phương thức thanh toán</h2>
@@ -152,7 +150,7 @@ export default function CheckOut() {
               </div>
             </div>
             <button onClick={submit}>
-              <Button text="Đặt Hàng" padding="px-4 py-2" bgColor="black"></Button>
+              <Button text="Đặt Hàng" padding="px-4 py-2" bgColor="black" />
             </button>
           </div>
         </div>

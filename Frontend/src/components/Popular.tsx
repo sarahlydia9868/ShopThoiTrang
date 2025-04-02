@@ -1,6 +1,6 @@
 import SectionHeader from "./modules/SectionHeader";
 import PopularFilterItem from "./modules/PopularFilterItem";
-import ProductBox, { IProductBox } from "./modules/ProductBox";
+import ProductBox from "./modules/ProductBox";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
@@ -8,17 +8,15 @@ import { clearErrors, getProduct } from "../actions/product";
 
 export default function Popular() {
   const dispatch = useDispatch<AppDispatch>();
-  const [currentPage, setCurrentPage] = useState(1);
 
   const [category, setCategory] = useState<string>("Tất cả");
-  const { products, loading, error, resultPerPage } = useSelector((state: RootState) => state.products);
-  const [status, setStatus] = useState<string>("all");
+  const { products, error } = useSelector((state: RootState) => state.products);
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
     }
-    dispatch(getProduct("", currentPage, category === "Tất cả" ? undefined : category));
-  }, [dispatch, currentPage, category, error]);
+    dispatch(getProduct({ category: category === "Tất cả" ? undefined : category }));
+  }, [dispatch, category, error]);
 
   return (
     <div data-aos="fade-up" className="flex justify-center items-center md:flex-row flex-col w-full h-full min-h-[320px]">

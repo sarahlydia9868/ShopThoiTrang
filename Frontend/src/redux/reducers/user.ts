@@ -121,7 +121,7 @@ export const profile = (state = {}, action: { type: UserConstants; payload?: Use
     case UserConstants.UPDATE_PASSWORD_FAIL:
     case UserConstants.UPDATE_USER_FAIL:
     case UserConstants.DELETE_USER_FAIL:
-      case UserConstants.SEND_CODE_FAIL:
+    case UserConstants.SEND_CODE_FAIL:
     case UserConstants.VERIFY_CODE_FAIL:
       return {
         ...state,
@@ -171,8 +171,15 @@ export const profile = (state = {}, action: { type: UserConstants; payload?: Use
   }
 };
 
+export interface IUsersRoot {
+  loading?: boolean;
+  error?: boolean;
+  message?: string;
+  users?: UserModel[];
+}
+
 // All user ----- Admin
-export const allUsers = (state = { users: [] }, action) => {
+export const allUsers = (state = {}, action: { type: UserConstants; payload?: UserModel[]; message?: string }): IUsersRoot => {
   switch (action.type) {
     case UserConstants.ALL_USERS_REQUEST:
       return {
@@ -184,94 +191,21 @@ export const allUsers = (state = { users: [] }, action) => {
         ...state,
         loading: false,
         users: action.payload,
+        message: action.message,
       };
 
     case UserConstants.ALL_USERS_FAIL:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: true,
+        message: action.message,
       };
 
     case UserConstants.CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
-      };
-
-    default:
-      return state;
-  }
-};
-
-// User Details
-export const userDetails = (state = { user: {} }, action) => {
-  switch (action.type) {
-    case UserConstants.USER_DETAILS_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-    case UserConstants.USER_DETAILS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        user: action.payload,
-      };
-
-    case UserConstants.USER_DETAILS_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-
-    case UserConstants.CLEAR_ERRORS:
-      return {
-        ...state,
-        error: null,
-      };
-
-    default:
-      return state;
-  }
-};
-
-export const forgotPassword = (state = {}, action) => {
-  switch (action.type) {
-    case UserConstants.FORGOT_PASSWORD_REQUEST:
-    case UserConstants.RESET_PASSWORD_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
-    case UserConstants.FORGOT_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        message: action.payload,
-      };
-
-    case UserConstants.RESET_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        success: action.payload,
-      };
-
-    case UserConstants.FORGOT_PASSWORD_FAIL:
-    case UserConstants.RESET_PASSWORD_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-
-    case UserConstants.CLEAR_ERRORS:
-      return {
-        ...state,
-        error: null,
+        error: false,
       };
 
     default:
@@ -281,8 +215,6 @@ export const forgotPassword = (state = {}, action) => {
 
 export default {
   allUsers,
-  forgotPassword,
   profile,
-  userDetails,
   user,
 };

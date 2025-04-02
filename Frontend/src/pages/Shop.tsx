@@ -3,8 +3,7 @@ import { VscSettings } from "react-icons/vsc";
 import { BiSort } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import ProductBox, { IProductBox } from "../components/modules/ProductBox";
+import ProductBox from "../components/modules/ProductBox";
 import Footer from "../components/Footer";
 import FormInput from "../components/modules/FormInput";
 import { useEffect, useState } from "react";
@@ -12,9 +11,9 @@ import NavBar from "../components/NavBar";
 import TopUp from "../components/modules/TopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { ICollections } from "../components/AdminCollections";
 import { clearErrors } from "../actions/user";
 import { getProduct } from "../actions/product";
+import { useSearchParams } from "react-router-dom";
 
 interface IShop {
   label: string;
@@ -22,19 +21,44 @@ interface IShop {
 }
 
 export default function Shop({ label, category }: IShop) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
   const [isOpenFilter, setIsOpenFilter] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const { products, loading, error, resultPerPage } = useSelector((state: RootState) => state.products);
-  const keyword = "";
-  const [status, setStatus] = useState<string>("all");
+  const { products, error, currentCount } = useSelector((state: RootState) => state.products);
+  const [status, setStatus] = useState<string>("createAt");
+  const isVaildPreviousPage = () => {
+    return currentPage > 1;
+  };
+
+  const isVaildNextPage = () => {
+    return 9 * currentPage < currentCount!;
+  };
+
+  const setPreviousPage = () => {
+    if (isVaildPreviousPage()) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const setNextPage = () => {
+    if (isVaildNextPage()) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
+
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
     }
-    dispatch(getProduct(keyword, currentPage, category));
-  }, [dispatch, keyword, currentPage, category, error]);
+    dispatch(getProduct({ currentPage: currentPage, category: category, sort: status }));
+  }, [dispatch, currentPage, category, error, status]);
 
   return (
     <>
@@ -58,20 +82,6 @@ export default function Shop({ label, category }: IShop) {
                 <IoIosSearch className=" absolute right-3 bottom-4 text-xl cursor-pointer" />
               </div>
             </div>
-            <div className="flex items-start flex-col w-full ">
-              <span className=" flex justify-center items-center gap-1 text font-bold">
-                <BiSolidCategoryAlt />
-                Danh Mục
-              </span>
-              <div className=" flex flex-col gap-3 mt-5 w-full h-32 overflow-y-auto">
-                {[]?.map((collection: ICollections) => (
-                  <div className=" flex justify-between items-center  cursor-pointer hover:text-purple-400 transition-colors ">
-                    <span className=" capitalize text-sm">{collection.title}</span>
-                    <span>({collection.products_count})</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             <div
               className={` lg:hidden absolute -top-7 ${
@@ -92,40 +102,53 @@ export default function Shop({ label, category }: IShop) {
             <div className="m-3 text-center">
               <span
                 className={` ${
-                  status === "cheapest" && "border-b-2 rounded-sm text-purple-600 border-purple-600"
+                  status === "price" && "border-b-2 rounded-sm text-red-600 border-red-600"
                 }   p-5  cursor-pointer capitalize transition-all duration-200 border-b-2  border-primary`}
-                onClick={() => setStatus("cheapest")}
+                onClick={() => setStatus("price")}
               >
                 Giá Tăng Dần
               </span>
               <span
                 className={` ${
-                  status === "expensive" && "border-b-2 rounded-sm text-purple-600 border-purple-600"
+                  status === "-price" && "border-b-2 rounded-sm text-red-600 border-red-600"
                 } p-5 cursor-pointer capitalize transition-all duration-200 border-b-2  border-primary`}
-                onClick={() => setStatus("expensive")}
+                onClick={() => setStatus("-price")}
               >
                 Giá Giảm Dần
               </span>
               <span
                 className={` ${
-                  status === "all" && "border-b-2 rounded-sm text-purple-600 border-purple-600"
+                  status === "createAt" && "border-b-2 rounded-sm text-red-600 border-red-600"
                 } p-5 cursor-pointer capitalize transition-all duration-200 border-b-2  border-primary`}
-                onClick={() => setStatus("all")}
+                onClick={() => setStatus("createAt")}
               >
                 Mới Nhất
               </span>
             </div>
           </div>
           <div className=" flex justify-center items-start gap-5 flex-wrap">
-            {products?.length === 0 ? <div className="py-50 text-red-500 text-3xl">Không có sản phẩm</div> : products?.map((product: ProductModel) => <ProductBox id={product._id} {...product} />)}
+            {products?.length === 0 ? (
+              <div className="py-50 text-red-500 text-3xl">Không có sản phẩm</div>
+            ) : (
+              products?.map((product: ProductModel) => <ProductBox id={product._id} {...product} />)
+            )}
           </div>
           <div className=" flex justify-center lg:justify-between  items-center flex-wrap gap-10 w-full mt-10">
-            <span className=" text-sm text-center">{`Hiện thị 1–5 trên ${products?.length} sản phảm`}</span>
+            <span className=" text-sm text-center">{`Hiện thị ${1 + 9 * (currentPage - 1)}-${
+              9 * currentPage > currentCount! ? currentCount! : 9 * currentPage
+            } trên ${currentCount} sản phảm`}</span>
             <div className="">
-              <span className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300">
+              <span
+                onClick={setPreviousPage}
+                className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300"
+              >
                 Trước
               </span>
-              <span className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300">
+
+              <span
+                onClick={setNextPage}
+                className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300"
+              >
                 Sau
               </span>
             </div>

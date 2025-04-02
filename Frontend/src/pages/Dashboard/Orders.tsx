@@ -72,7 +72,7 @@ export default function OrdersPage() {
                     </td>
 
                     <td className="py-5">
-                      <Link to={`/account/orders/${order._id}`}>
+                      <Link to={`/account/order/${order._id}`}>
                         <a className="flex justify-end text-red-500 hover:underline">Xem chi tiết</a>
                       </Link>
                     </td>

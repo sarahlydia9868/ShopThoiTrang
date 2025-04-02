@@ -108,7 +108,7 @@ export default function NavBar() {
                       </div>
                     </div>
                     {user?.isAdmin ? (
-                      <Link to="/admin">
+                      <Link to="/admin/dashboard">
                         <NavBarOption title="Bảng quản trị" icon={<LuLayoutPanelLeft className="text-2xl" />} />
                       </Link>
                     ) : (
@@ -162,7 +162,7 @@ export default function NavBar() {
           </div>
         </div>
       </div>
-      <Modal isOpen={isOpenModal} confirmModal={confirmModal} closeModal={closeModal} text="Bạn có muốn đăng xuất không" />
+      <Modal isOpen={isOpenModal} confirmModal={confirmModal} closeModal={closeModal} text="Bạn có muốn đăng xuất không?" />
       <ToastAlert text={toastAlertText} isOk={true} isOpen={openToastAlert} />
     </>
   );

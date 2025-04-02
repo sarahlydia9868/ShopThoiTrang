@@ -81,6 +81,7 @@ export const register = asyncHandler(async (req: any, res: Response) => {
         password: newUser.password,
         email: newUser.email,
         isAdmin: newUser.isAdmin,
+        banned: newUser.banned,
         avatarImage: newUser.avatarImage,
         address: newUser.address,
         birthdate: newUser.birthdate,
@@ -119,6 +120,9 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   if (user) {
     const match = await bcrypt.compare(password, user.password!);
     if (match) {
+      if (user.banned) {
+        res.status(400).json({ message: "Tài khoản bị cấm" });
+      }
       const userPayLoad: UserPayLoad = {
         message: "Đăng nhập thành công",
         data: {
@@ -127,6 +131,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
           password: user.password,
           email: user.email,
           isAdmin: user.isAdmin,
+          banned: user.banned,
           avatarImage: user.avatarImage,
           address: user.address,
           birthdate: user.birthdate,
@@ -156,13 +161,11 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // @desc    Lấy thông tin tất cả người dùng
-// @route   Get /api/users
+// @route   Get /api/users/all-user
 // @access  Admin
 
 export const getUsersList = asyncHandler(async (req: Request, res: Response) => {
-  const pageSize = 10;
-  const page: any = req.query.page || 1;
-  const query: any = req.query.query || "";
+  const query: any = req.query.query ?? "";
 
   const queryFilter =
     query && query !== "all"
@@ -176,28 +179,14 @@ export const getUsersList = asyncHandler(async (req: Request, res: Response) => 
 
   const users = await User.find({
     ...queryFilter,
-  })
-    .skip(pageSize * (page - 1))
-    .sort("-createdAt")
-    .limit(pageSize)
-    .lean();
-
-  const countUsers = await User.countDocuments({
-    ...queryFilter,
   });
-
-  const pages = Math.ceil(countUsers / pageSize);
-
   if (users) {
     res.status(200).json({
-      countUsers,
-      users,
-      page,
-      pages,
+      data: users,
+      message: "Lấy danh sách người dùng thành công",
     });
   } else {
-    res.status(500);
-    throw new Error("Not Found!");
+    res.status(400).json({ message: "Lỗi lấy danh sách người dùng" });
   }
 });
 
@@ -216,6 +205,7 @@ export const getUserBydId = asyncHandler(async (req: Request, res: Response) => 
         password: user.password,
         email: user.email,
         isAdmin: user.isAdmin,
+        banned: user.banned,
         avatarImage: user.avatarImage,
         address: user.address,
         birthdate: user.birthdate,
@@ -238,7 +228,7 @@ export const getUserBydId = asyncHandler(async (req: Request, res: Response) => 
 // @access  Private
 
 export const updateUserItems = asyncHandler(async (req: Request, res: Response) => {
-  const {id, cartItems, wishList} = req.body;
+  const { id, cartItems, wishList } = req.body;
   const user = await User.findById(id);
   if (user) {
     user.cartItems = cartItems;
@@ -273,7 +263,7 @@ export const updateUserProfile = asyncHandler(async (req: Request, res: Response
           width: 500,
           height: 500,
           quality: 100,
-          crop: "scale",
+          crop: "fill",
         });
         user.avatarImage = {
           public_id: myCloud.public_id,
@@ -290,16 +280,21 @@ export const updateUserProfile = asyncHandler(async (req: Request, res: Response
   }
 });
 
-// @desc    Đặt quyền truy cập admin
-// @route   Post /api/users/promote/:id
+// @desc    Thay đổi quyền truy cập
+// @route   Post /api/users/promote
 // @access  Admin
 
-export const promoteAdmin = asyncHandler(async (req: Request, res: Response) => {
+export const promoteUser = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.params.id);
-    user.isAdmin = true;
+    const id = req.body.id;
+    const isAdmin = req.body.isAdmin;
+    const banned = req.body.banned;
+    const user = await User.findById(id);
+    user.isAdmin = isAdmin;
+    user.banned = banned;
+    await user.save();
     res.status(200).json({
-      message: "Đặt quyền truy cập admin thành công",
+      message: "Thay đổi quyền truy cập thành công",
     });
   } catch (ex) {
     res.status(400).json({
@@ -314,8 +309,11 @@ export const promoteAdmin = asyncHandler(async (req: Request, res: Response) => 
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.params.id);
-    await user.remove();
+    const user = await User.findById(req.body.id);
+    if (user.avatarImage.public_id !== "profile") {
+      await cloudinary.v2.uploader.destroy(user.avatarImage.public_id);
+    }
+    await User.findByIdAndDelete(req.body.id);
     res.status(200).json({
       message: "Đã xoá tài khoản",
     });
@@ -430,7 +428,7 @@ export default {
   getUserBydId,
   updateUserItems,
   updateUserProfile,
-  promoteAdmin,
+  promoteUser,
   deleteUser,
   sendCodePassword,
   verifyCode,

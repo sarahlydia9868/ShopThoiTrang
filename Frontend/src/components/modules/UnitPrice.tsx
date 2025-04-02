@@ -3,5 +3,9 @@ interface IUnitPrice {
 }
 
 export default function UnitPrice({ price }: IUnitPrice) {
-  return <span className=" text-2xl">${String(price).slice(0, 5)}</span>;
+  return (
+    <span className=" text-2xl text-red-500">
+      {price?.toLocaleString("vi-VN")}đ
+    </span>
+  );
 }

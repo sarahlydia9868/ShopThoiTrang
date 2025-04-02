@@ -29,10 +29,12 @@ declare global {
     address?: ShippingAddress[];
     birthdate?: string;
     phoneNumber?: number;
+    banned: boolean;
     isAdmin: boolean;
     avatarImage: Image;
     cartItems: CartItem[];
     wishList: CartItem[];
+    banned?: boolean;
   }
 
   interface CartItem {
@@ -47,7 +49,7 @@ declare global {
 
   // Order
   interface OrderModel {
-    _id: Types.ObjectId;
+    _id?: Types.ObjectId;
     user: Types.ObjectId;
     cartItems: CartItem[];
     shippingAddress: ShippingAddress;
@@ -67,13 +69,10 @@ declare global {
   }
 
   interface ProductModel {
-    _id: Types.ObjectId;
+    _id?: Types.ObjectId;
     name: string;
     description: string;
-    collection?: {
-      name: string;
-      id: Types.ObjectId;
-    };
+    collectionName?: string;
     price: number;
     offerPrice: number;
     color: string[];
@@ -88,11 +87,17 @@ declare global {
   }
 
   interface CollectionModel {
-    _id: Types.ObjectId;
+    _id?: Types.ObjectId;
     title: string;
+    titleContent?: string;
     content: string;
     images: Image[];
+    createdAt?: string;
   }
 }
 
 export {};
+
+cartItems: [{
+  name: string
+}]

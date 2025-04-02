@@ -24,7 +24,7 @@ export const getOrderList = asyncHandler(async (req: Request, res: Response) => 
 // @access  Private
 
 export const getUserOrder = asyncHandler(async (req: any, res: Response) => {
-  const orders = await Order.find({ user: req.body.id });
+  const orders = await Order.find({ user: req.body.id }).sort("-createdAt");
   if (orders) {
     res.status(200).json({
       message: "Đã lấy đơn hàng",
@@ -67,15 +67,31 @@ export const getOrderById = asyncHandler(async (req: Request, res: Response) => 
   }
 });
 
+// @desc    Thay đổi tiến trình đơn hàng
+// @route   Post /api/orders/update-progress
+// @access  Private
+
+export const updateProgressOrder = asyncHandler(async (req: Request, res: Response) => {
+  const order = await Order.findById(req.body.id);
+
+  if (order) {
+    order.progress = req.body.progress;
+    await order.save();
+    res.status(200).json({ message: "Thành công" });
+  } else {
+    res.status(400).json({ message: "Không thành công" });
+  }
+});
+
 // @desc    Xoá đơn hàng
-// @route   Delete /api/orders/delete
+// @route   Post /api/orders/delete
 // @access  Private
 
 export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
-  const order = (await Order.findById(req.body.id)) as any;
+  const order = await Order.findById(req.body.id);
 
   if (order) {
-    await order.remove();
+    await Order.findByIdAndDelete(order);
     res.status(200).json({ message: "Đơn hàng đã xoá" });
   } else {
     res.status(400).json({ message: "Không thành công" });
@@ -94,6 +110,7 @@ export const createOrder = asyncHandler(async (req: any, res: Response) => {
     shippingAddress,
     totalPrice,
     user: id,
+    progress: "Chờ xác nhận",
   });
 
   if (cartItems.length === 0) {
@@ -120,4 +137,5 @@ export default {
   getOrderById,
   deleteOrder,
   createOrder,
+  updateProgressOrder
 };

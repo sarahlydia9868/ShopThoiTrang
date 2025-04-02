@@ -4,6 +4,7 @@ import { Schema, model } from "mongoose";
 const collectionSchema = new Schema<CollectionModel>(
   {
     title: { type: String, required: true },
+    titleContent: { type: String, required: false },
     content: { type: String, required: true },
     images: [
       {

@@ -3,36 +3,31 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { clearErrors } from "../actions/user";
 import { getProduct } from "../actions/product";
 import ProductBox from "./modules/ProductBox";
-import ProductedBox from "./modules/ProductedBox";
-
 interface IRelatedProducts {
   category: string;
 }
 
 export default function RelatedProducts({ category }: IRelatedProducts) {
   const dispatch = useDispatch<AppDispatch>();
-  const { products, loading, error, resultPerPage } = useSelector((state: RootState) => state.products);
-  const keyword = "";
-  const [status, setStatus] = useState<string>("all");
+  const { products, error } = useSelector((state: RootState) => state.products);
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
     }
-    dispatch(getProduct(keyword, 1, category));
-  }, [dispatch, keyword, category, error]);
+    dispatch(getProduct({category: category}));
+  }, [dispatch, category, error]);
 
   const link = {
-    Đầm: "shop/dam",
-    Áo: "shop/ao",
-    Quần: "shop/quan",
+    "Đầm": "shop/dam",
+    "Áo": "shop/ao",
+    "Quần": "shop/quan",
     "Chân Váy": "shop/chan-vay",
     "Áo Khoác": "shop/ao-khoac",
   };

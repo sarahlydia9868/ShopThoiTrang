@@ -4,7 +4,6 @@ import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
-import ContactUs from "./pages/ContactUs";
 import Cart from "./pages/Cart";
 import WishList from "./pages/WishList";
 import Collection from "./pages/Collection";
@@ -28,6 +27,12 @@ import ShippingAddress from "./pages/Account/ShippingAddress";
 import UserRoute from "./routes/UserRoute";
 import Checkout from "./pages/CheckOut";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import AdminPanel from "./pages/AdminPanel";
+import AdminDashboard from "./components/AdminDashboard";
+import AdminUsers from "./components/AdminUsers";
+import AdminProducts from "./components/AdminProducts";
+import AdminCollections from "./components/AdminCollections";
+import AdminOrders from "./components/AdminOrders";
 //TODO: change routes
 const routes = [
   { path: "/", element: <Index /> },
@@ -35,7 +40,6 @@ const routes = [
   { path: "/login", element: <Login /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/sign-up", element: <SignUp /> },
-  { path: "/contact-us", element: <ContactUs /> },
   { path: "/wishlist", element: <WishList /> },
   { path: "/cart", element: <Cart /> },
   { path: "/collection", element: <Collection /> },
@@ -45,8 +49,6 @@ const routes = [
   { path: "/shop/quan", element: <QuanPC /> },
   { path: "/shop/chan-vay", element: <ChanVayPC /> },
   { path: "/shop/ao-khoac", element: <AoKhoacPC /> },
-  { path: "/orders-cancel/:orderID", element: <OrderCancel /> },
-  { path: "/orders-confirmation/:orderID", element: <OrderConfirmation /> },
   {
     path: "/account/*",
     element: <UserRoute />,
@@ -59,9 +61,22 @@ const routes = [
       { path: "dashboard", element: <Dashboard /> },
       { path: "orders", element: <Orders /> },
       { path: "check-out", element: <Checkout /> },
-      { path: "orders/:orderID", element: <OrdersDetail /> },
+      { path: "order/:orderID", element: <OrdersDetail /> },
+      { path: "order-cancel/:orderID", element: <OrderCancel /> },
+      { path: "order-confirmation/:orderID", element: <OrderConfirmation /> },
       { path: "return-request", element: <ReturnRequest /> },
       { path: "review", element: <Review /> },
+    ],
+  },
+  {
+    path: "/admin/*",
+    element: <AdminPanel />,
+    children: [
+      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "users", element: <AdminUsers /> },
+      { path: "orders", element: <AdminOrders /> },
+      { path: "products", element: <AdminProducts /> },
+      { path: "collections", element: <AdminCollections /> },
     ],
   },
   { path: "*", element: <NotFound /> },

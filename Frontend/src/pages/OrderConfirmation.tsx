@@ -15,7 +15,7 @@ export default function OrderConfirmation() {
             <h2 className="text-2xl flex justify-center item-center font-bold mb-2">Đặt Hàng Thành Công!</h2>
             <p className="text-base flex justify-center item-center text-gray-500 mb-6">{`ID Đơn Hàng: ${orderID}`}</p>
             <div className="flex justify-center gap-4 mt-10">
-              <Link to={`/order/${orderID}`}>
+              <Link to={`/account/order/${orderID}`}>
                 <Button text="Xem đơn hàng" padding="px-4 py-2" bgColor="black" />
               </Link>
               <Link to="/">

@@ -9,9 +9,9 @@ import { loadUser } from "./actions/user";
 function App() {
   const router = useRoutes(routes);
   useEffect(() => {
-
     store.dispatch(loadUser());
-  });
+  }, []);
+
   return (
     <Provider store={store}>
       <AOSInit />

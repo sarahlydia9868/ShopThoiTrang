@@ -2,13 +2,11 @@ import { FaRegHeart } from "react-icons/fa";
 import { PiBasket } from "react-icons/pi";
 import { LiaTimesCircle } from "react-icons/lia";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "./Button";
-import UnitPrice from "./UintPrice";
-import DiscountedPrice from "./DiscountedPrice";
+import UnitPrice from "./UnitPrice";
 import Tag from "./Tag";
 import Loader from "./Loader";
-import { getProductDetails } from "../../actions/product";
 export interface IProductBox {
   id: string;
   images: Image[];
@@ -32,18 +30,12 @@ export default function ProductBox({ id, name, price, offerPrice, images, qty, d
     e.preventDefault();
     setIsOpenQuickViewBox(!isOpenQuickViewBox);
   };
-
-  const openProductDetails = (e: any) =>  {
-    e.preventDefault();
-    getProductDetails(id);
-  }
-
   return (
     <>
       <Link to={`/product/${id}`}>
         <div className="  flex justify-center items-center flex-col min-h-full max-h-128">
           <div className={` group relative  w-full rounded-3xl overflow-hidden cursor-pointer`}>
-            <div className={`flex justify-center items-start overflow-hidden w-64`}>
+            <div className={`flex justify-center items-start overflow-hidden h-94 w-64`}>
               {images ? (
                 <img src={images[0]?.url} alt="product" className="h-full rounded-3xl group-hover:-translate-y-5 transition-transform duration-1000 ease-in-out" />
               ) : (
@@ -85,18 +77,23 @@ export default function ProductBox({ id, name, price, offerPrice, images, qty, d
                 <LiaTimesCircle className=" text-3xl cursor-pointer hover:text-rose-600 transition-colors duration-300" />
               </div>
             </div>
-            <span className=" text-zinc-600 text-sm">{description}</span>
+            <span className=" text-zinc-600 text-sm">
+              {description.length > 240 ? description.slice(0, 240) : description}
+              {description.length > 240 ? "..." : null}
+            </span>
             <div className="">
               <UnitPrice price={price} />
+              
+            {offerPrice > 0 ? <span className="pl-5 text-gray-400 line-through">{offerPrice.toLocaleString("vi-VN")}đ</span> : <></>}
             </div>
-            <button onClick={openProductDetails}>
+            <Link to={`/product/${id}`}>
               <Button padding=" p-2 text-center " text="Xem chi tiết" bgColor="white" />
-            </button>
+            </Link>
             <div className="flex flex-col gap-3 border-t-[1px] py-3">
               <div className="flex items-center gap-2">
                 <span className="font-bold capitalize">{"Màu sắc"}:</span>
                 {color.map((e) => (
-                  <div className="w-5 h-5 rounded-full" style={{ backgroundColor: e }}></div>
+                  <div className={`w-5 h-5 rounded-full border-1 border-gray-400`} style={{ backgroundColor: e }}></div>
                 ))}
               </div>
 

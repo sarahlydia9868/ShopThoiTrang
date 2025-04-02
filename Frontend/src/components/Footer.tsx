@@ -1,7 +1,4 @@
-import FormInput from "./modules/FormInput";
-import FooterLinks from "./modules/FooterLink";
-import { IoIosArrowRoundForward } from "react-icons/io";
-import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <div className=" bg-black border-t-1 border-black w-full  pt-5 px-8 ">

@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import { NextFunction, Response } from "express";
 import sanitizedConfig from "../util/config";
 import store2 from "store2";
+import User from "../model/user";
 
 export interface RequestWithUser extends Request {
   user: UserModel;
@@ -28,7 +29,8 @@ export const auth = asyncHandler(async (req: any, res: Response, next: NextFunct
 });
 
 export const admin = asyncHandler(async (req: RequestWithUser | any, res: Response, next: NextFunction) => {
-  if (req.user && req.user.isAdmin) {
+  const user = await User.findById(req.params.id);
+  if (user&& user.isAdmin) {
     next();
   } else {
     res.status(401).json({ message: "Không phải admin" });

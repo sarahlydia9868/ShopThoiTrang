@@ -22,14 +22,12 @@ import Alert from "../components/modules/Alert";
 import ToastAlert from "../components/modules/ToastAlert";
 import RatingStars from "../components/modules/RatingStars";
 import { getProductDetails } from "../actions/product";
-import { clearErrors } from "../actions/user";
+import { clearErrors, loadUser } from "../actions/user";
 import { LiaTimesCircle } from "react-icons/lia";
 import { updateItems } from "../actions/user";
 import { IProfileRoot, IUserRoot } from "../redux/reducers/user";
 
 export default function ProductDetail() {
-  // Dữ liệu giả lập
-
   const { productID } = useParams();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +36,6 @@ export default function ProductDetail() {
 
   const { product, loading, error, message } = useSelector((state: RootState) => state.productDetails);
 
-  // State
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -50,7 +47,6 @@ export default function ProductDetail() {
   const [isToastAlertOK, setIsToastAlertOK] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState("Thông tin chi tiết");
 
-  // State cho modal
   const [isImageBoxOpen, setIsImageBoxOpen] = useState(false);
 
   const incrementHandler = () => {
@@ -119,19 +115,44 @@ export default function ProductDetail() {
   };
 
   useEffect(() => {
-    dispatch(getProductDetails(productID!));
     if (isUpdated) {
       dispatch(clearErrors());
       setIsToastAlertOK(true);
       setToastAlertText("Thêm sản phẩm thành công");
       setOpenToastAlert(true);
+      dispatch(loadUser());
       setTimeout(() => {
         setOpenToastAlert(false);
       }, 3000);
-      return;
     }
-  }, [dispatch, error, product, loading, message]);
 
+  }, [dispatch, isUpdated] )
+
+  useEffect(() => {
+    dispatch(getProductDetails(productID!));
+    
+  }, [dispatch, getProductDetails, productID]);
+
+  const ProductDescription = ({ description }) => {
+    const sentences = description
+      .split(".")
+      .map((sentence) => sentence.trim())
+      .filter((sentence) => sentence.length > 0);
+
+    const title = sentences[0] || "";
+    const details = sentences.slice(1);
+
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h2 className="text-2xl font-bold text-black mb-4">{title}</h2>
+        <ul className="list-disc list-inside text-gray-700 space-y-2">
+          {details.map((sentence, index) => (
+            <li key={index}>{sentence}.</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
   return (
     <>
       <NavBar />
@@ -143,8 +164,8 @@ export default function ProductDetail() {
           <>
             <div className="flex p-8 min-h-screen">
               <div className="w-1/2 p-4 flex">
-                <div className="flex flex-col gap-3">
-                  {product!.images.map((img, index) => (
+                <div className="flex flex-col gap-3 overflow-y-auto max-h-[830px]">
+                  {product?.images?.map((img, index) => (
                     <img
                       key={index}
                       src={img.url}
@@ -154,12 +175,13 @@ export default function ProductDetail() {
                     />
                   ))}
                 </div>
-                <div className="ml-6 overflow-hidden rounded-xl shadow-lg h-full max-h-[830px]">
+
+                <div className="ml-6 overflow-hidden rounded-xl shadow-lg max-h-[830px] flex-1">
                   <img
-                    src={product!.images[selectedImage].url}
+                    src={product?.images?.[selectedImage]?.url}
                     alt="MainProduct"
-                    className="h-full object-cover cursor-pointer transition-transform duration-300 transform hover:scale-130"
-                    onClick={() => setIsImageBoxOpen(true)} // Mở lightbox khi click
+                    className="h-full w-full object-cover cursor-pointer transition-transform duration-300 transform hover:scale-125"
+                    onClick={() => setIsImageBoxOpen(true)}
                   />
                 </div>
               </div>
@@ -168,22 +190,22 @@ export default function ProductDetail() {
                 <h1 className="text-4xl font-bold my-4">{product!.name}</h1>
                 <div className="flex items-center text-sm gap-2">
                   <RatingStars rating={product!.ratings} />
-                  <span className="text-gray-500">{`${product!.ratings} Rating (5 customer reviews)`}</span>
+                  <span className="text-gray-500">{`${product!.ratings} sao (0 người đánh giá)`}</span>
                 </div>
 
-                <p className="text-gray-600 my-4 min-h-30">{product!.description}</p>
+                <p className="text-gray-600 my-4 min-h-20">{}</p>
 
                 <div className="flex items-center gap-4 my-4">
                   <span className="text-2xl font-bold text-red-500">{product!.price.toLocaleString("vi-VN")}đ</span>
-                  <span className="text-gray-400 line-through">{product!.offerPrice.toLocaleString("vi-VN")}đ</span>
+                  {product!.offerPrice > 0 ? <span className="text-gray-400 line-through">{product!.offerPrice.toLocaleString("vi-VN")}đ</span> : <></>}
                 </div>
                 <hr className="my-4 border-gray-300  border-dashed " />
                 <div className="flex items-center py-4 gap-2">
                   <span className="font-bold capitalize">{"Màu sắc"}:</span>
                   {product!.color.map((e) => (
-                    <div className={`w-8 h-8 rounded-full ${selectedColor === e ? "border-1 border-gray-400" : ""}  flex items-center justify-center`}>
+                    <div className={`w-8 h-8 rounded-full  ${selectedColor === e ? "border-1 border-gray-400" : ""}  flex items-center justify-center`}>
                       <button
-                        className="w-5 h-5  rounded-full"
+                        className={`w-5 h-5 border-1 border-gray-400 rounded-full`}
                         onClick={() => {
                           setSelectedColor(e);
                         }}
@@ -192,6 +214,7 @@ export default function ProductDetail() {
                     </div>
                   ))}
                 </div>
+
                 <div className="flex items-center py-4 gap-2">
                   <span className="font-bold capitalize">{"Size"}:</span>
                   {product!.size.map((size) => (
@@ -217,38 +240,45 @@ export default function ProductDetail() {
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center py-4 gap-2">
-                  <span className="font-bold capitalize">{"Số lượng"}:</span>
-                  <div className="flex justify-center items-center gap-3 text-[2.5rem]">
-                    <FaCircleMinus className=" cursor-pointer" onClick={decrementHandler} />
-                    <input
-                      type="number"
-                      min={1}
-                      value={quantity}
-                      placeholder="0"
-                      className="placeholder:text-black rounded-full w-10  h-10 text-sm text-center outline-none border-1 border-black  bg-primary "
-                      onChange={(e) => setQuantity(+e.target.value)}
-                    />
-                    <BsFillPlusCircleFill className=" cursor-pointer" onClick={incrementHandler} />
-                  </div>
-                </div>
 
-                <div className="flex gap-4 my-4 mb-8">
-                  <button onClick={addCartSubmit}>
-                    <Button padding="px-6 py-2" text="Thêm vào giỏ hàng" bgColor="black" />
-                  </button>
-                  <button onClick={addWishListSubmit}>
-                    <Button padding="px-6 py-2" text=" Thêm vào danh sách yêu thích" />
-                  </button>
-                </div>
+                {product.qty > 0 ? (
+                  <div className="flex items-center py-4 gap-2">
+                    <span className="font-bold capitalize">{"Số lượng"}:</span>
+                    <div className="flex justify-center items-center gap-3 text-[2.5rem]">
+                      <FaCircleMinus className=" cursor-pointer" onClick={decrementHandler} />
+                      <input
+                        type="number"
+                        min={1}
+                        value={quantity}
+                        placeholder="0"
+                        className="placeholder:text-black rounded-full w-10  h-10 text-sm text-center outline-none border-1 border-black  bg-primary "
+                        onChange={(e) => setQuantity(+e.target.value)}
+                      />
+                      <BsFillPlusCircleFill className=" cursor-pointer" onClick={incrementHandler} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center py-4 gap-2">
+                    <div className={` overflow-hidden uppercase font-bold rounded-lg border-1 px-6 py-2 border-red-500 text-red-500`}>Hết Hàng</div>
+                  </div>
+                )}
+                {product.qty > 0 ? (
+                  <div className="flex gap-4 my-4 mb-8">
+                    <button onClick={addCartSubmit}>
+                      <Button padding="px-6 py-2" text="Thêm vào giỏ hàng" bgColor="black" />
+                    </button>
+                    <button onClick={addWishListSubmit}>
+                      <Button padding="px-6 py-2" text=" Thêm vào danh sách yêu thích" />
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
 
                 <hr className="my-4 border-gray-300 " />
 
                 <div className="my-4">
                   <strong>SKU: </strong> {product._id.toUpperCase()}
-                </div>
-                <div className="mt-2 mb-4">
-                  <strong>Tags: </strong> Đầm, Đầm Mùa Hè, Mùa Hè, Xuân Hè 1S
                 </div>
                 <div className="flex justify-start items-start gap-3">
                   <span className="font-bold">Share:</span>
@@ -287,52 +317,8 @@ export default function ProductDetail() {
               </div>
             </div>{" "}
             {activeTab === "Thông tin chi tiết" ? (
-              <div className="max-w-4xl mx-auto p-6">
-                {/* Tiêu đề sản phẩm */}
-                <h1 className="text-3xl font-bold text-black mb-4">ĐẦM CÁCH ĐIỆU DÂY NƠ CỔ, CHÂN ĐỔ – THANH LỊCH & NỮ TÍNH</h1>
-
-                {/* Mô tả sản phẩm */}
-                <p className="text-gray-700 mb-6">
-                  Tôn vinh vẻ đẹp thanh lịch của quý cô hiện đại, thiết kế đầm 1S14.2501K mang đến sự kết hợp hoàn hảo giữa sự tinh tế và tính ứng dụng cao.
-                </p>
-
-                {/* Điểm nổi bật của sản phẩm */}
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Điểm nổi bật của sản phẩm:</h2>
-                  <ul className="list-disc list-inside text-gray-700">
-                    <li>Thiết kế thanh lịch, tinh tế.</li>
-                    <li>Phần cổ đính nơ duyên dáng, gây ấn tượng tinh tế và sang trọng.</li>
-                    <li>Chi tiết thêu logo JDD màu đỏ đậm trên nền vải ghi khói/hồng.</li>
-                    <li>Thiết kế tay nhún bồng, gợi nhàng và nữ tính.</li>
-                  </ul>
-                </div>
-
-                {/* Chất liệu & Màu sắc */}
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Chất liệu & Màu sắc:</h2>
-                  <p className="text-gray-700">
-                    Chất liệu Polyester weft stripe cao cấp, mềm mại, thoáng khí và giữ form tốt. Hai gam màu tinh tế: Hồng duyên dáng, Ghi khói thanh lịch, dễ dàng phối đồ.
-                  </p>
-                </div>
-
-                {/* Gợi ý phối đồ */}
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Tính ứng dụng & Gợi ý phối đồ:</h2>
-                  <p className="text-gray-700">
-                    Thiết kế lý tưởng dành cho những buổi làm việc, gặp gỡ bạn bè hay các buổi cà phê thư giãn. Kết hợp đầm cùng giày cao gót mũi nhọn và túi xách bản nhỏ giúp tôn
-                    lên sự thanh lịch và tinh tế.
-                  </p>
-                </div>
-
-                {/* Cách giặt là và bảo quản sản phẩm */}
-                <div className="mb-6">
-                  <h2 className="text-lg font-semibold mb-2">Cách giặt là và bảo quản sản phẩm:</h2>
-                  <ul className="list-disc list-inside text-gray-700">
-                    <li>Giặt tay nhẹ nhàng hoặc giặt máy chế độ nhẹ.</li>
-                    <li>Tránh sử dụng chất tẩy mạnh để bảo vệ độ bền màu sắc.</li>
-                    <li>Phơi nơi thông thoáng, hạn chế phơi dưới ánh nắng gắt.</li>
-                  </ul>
-                </div>
+              <div className="max-w-4xl mx-auto p-6 text-xl">
+                <ProductDescription description={product?.description} />
               </div>
             ) : (
               <div className="lg:px-30 mt-5">

@@ -6,7 +6,8 @@ const userSchema = new Schema<UserModel>(
   {
     username: { type: String, required: true },
     password: { type: String, required: true },
-    isAdmin: { type: Boolean, required: true },
+    isAdmin: { type: Boolean, required: true, default: false },
+    banned: { type: Boolean, required: true,  default: false  },
     avatarImage: {
       public_id: {
         type: String,
