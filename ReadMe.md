@@ -71,6 +71,17 @@ npm start
 
 🌟 Trải nghiệm mua sắm trực tuyến thế hệ mới với nền tảng thương mại điện tử đầy đủ tính năng của chúng tôi!
 
+### 🧑‍💻 Tài khoản Mongo
+```
+ username=kten89798@gmail.com
+ password=matkhau123@
+```
+### 🧑‍💻 Tài khoản Cloudinary
+```
+ username=ponasot111@linxues.com
+ password=Matkhau123@
+```
+
 ### 🧑‍💻 Tài khoản DEMO
 - **Admin**
 ```
