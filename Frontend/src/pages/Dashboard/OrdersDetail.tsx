@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { getOrderDetails, updateOrder } from "../../actions/order";
 import { useNavigate, useParams } from "react-router-dom";
 import ToastAlert from "../../components/modules/ToastAlert";
+import TopUp from "../../components/modules/TopUp";
 
 const formatDate = (isoString: string, addMinutes: number = 0) => {
   const date = new Date(isoString);
@@ -62,6 +63,7 @@ export default function OrderDetailPage() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Đơn Hàng" path="Bảng điều khiển" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

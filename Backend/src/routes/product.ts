@@ -7,6 +7,7 @@ router.route("/").get(productController.getProductList);
 router.route("/:id/reviews").post(auth, productController.createReview);
 router.route("/:id").get(productController.getProductById).put(auth, admin, productController.updateProduct);
 router.route("/new").post(auth, admin, productController.createProduct);
+router.route("/update").post(auth, admin, productController.updateProduct);
 router.route("/delete").post(auth, admin, productController.deleteProduct);
 
 export default router;

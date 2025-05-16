@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import Order from "../model/order";
+import { sendMail } from "../util/mail";
+import User from "../model/user";
 
 // @desc    Lấy thông tin tất cả đơn hàng
 // @route   Get /api/orders
@@ -130,6 +132,58 @@ export const createOrder = asyncHandler(async (req: any, res: Response) => {
   }
 });
 
+// @desc    Gửi mail trạng thái đơn hàng
+// @route   POST /api/orders/send-mail
+// @access  Admin
+
+export const sendOrderMail = asyncHandler(async (req: any, res: Response) => {
+  try {
+
+    const {userID, title, content } = req.body;
+
+    const user = await User.findById(userID);
+
+
+    const htmlContent = content
+  .replace(
+    /#(\w+)/g,
+    '<span style="color:#f56565;font-weight:500">#$1</span>'
+  )
+  .replace(/\n/g, '<br/>');
+
+const emailTemplate = `<!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mail</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+        <div style="max-width: 400px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; margin: 0 auto;">
+            <p style="font-size: 18px;">Xin chào ${user.name},</p>
+            <p style="font-size: 14px;">${htmlContent}</p>
+            <p style="margin-top: 30px;">Cảm ơn,</p>
+            <p style="font-weight: bold;">Fashin Store</p>
+        </div>
+    </body>
+    </html>`;
+
+    await sendMail({
+      email: user.email,
+      subject: `${title}`,
+      html: emailTemplate,
+    });
+    res.status(200).json({
+      message: "Đã gửi thông tin đến email của bạn",
+    });
+  } catch (ex) {
+    res.status(400).json({
+      message: "Không tìm thấy tài khoản",
+    });
+  }
+});
+
+
 export default {
   getOrderList,
   getUserOrder,
@@ -137,5 +191,6 @@ export default {
   getOrderById,
   deleteOrder,
   createOrder,
-  updateProgressOrder
+  updateProgressOrder,
+  sendOrderMail
 };

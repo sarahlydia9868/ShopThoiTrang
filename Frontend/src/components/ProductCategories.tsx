@@ -7,12 +7,15 @@ import ProductedBox from "./modules/ProductedBox";
 import { Link } from "react-router-dom";
 
 export default function ProductCategories() {
+  const scrollToUpHandler = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <div data-aos="fade-up" className="flex justify-center items-center md:flex-row flex-col w-full h-full min-h-[320px]">
       <div className="container mx-auto my-28">
         <div className=" flex justify-around md:justify-between flex-wrap items-center ">
           <SectionHeader text="Danh Mục Sản Phẩm" />
-          <Link to="/shop-dam">
+          <Link to="/shop/dam" onClick={scrollToUpHandler}>
             <span className=" flex justify-center items-center text-sm font-bold capitalize cursor-pointer">
               Xem tất cả
               <MdKeyboardArrowRight className=" text-xl mb-0.5" />
@@ -40,19 +43,19 @@ export default function ProductCategories() {
             className="mySwiper"
           >
             <SwiperSlide>
-              <ProductedBox bgUrl="/images/product/productCategory1.jpeg" title="Đầm" path="/shop-dam" />
+              <ProductedBox bgUrl="/images/product/productCategory1.jpeg" title="Đầm" path="/shop/dam" />
             </SwiperSlide>
             <SwiperSlide>
-              <ProductedBox bgUrl="/images/product/productCategory2.jpeg" title="Áo" path="/shop-ao" />
+              <ProductedBox bgUrl="/images/product/productCategory2.jpeg" title="Áo" path="/shop/ao" />
             </SwiperSlide>
             <SwiperSlide>
-              <ProductedBox bgUrl="/images/product/productCategory3.jpeg" title="Quần" path="/shop-quan" />
+              <ProductedBox bgUrl="/images/product/productCategory3.jpeg" title="Quần" path="/shop/quan" />
             </SwiperSlide>
             <SwiperSlide>
-              <ProductedBox bgUrl="/images/product/productCategory4.jpeg" title="Chân Váy" path="/shop-chan-vay" />
+              <ProductedBox bgUrl="/images/product/productCategory4.jpeg" title="Chân Váy" path="/shop/chan-vay" />
             </SwiperSlide>
             <SwiperSlide>
-              <ProductedBox bgUrl="/images/product/productCategory5.jpeg" title="Áo Khoác" path="/shop-ao-khoac" />
+              <ProductedBox bgUrl="/images/product/productCategory5.jpeg" title="Áo Khoác" path="/shop/ao-khoac" />
             </SwiperSlide>
           </Swiper>
         </div>

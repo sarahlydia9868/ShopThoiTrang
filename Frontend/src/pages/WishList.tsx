@@ -9,6 +9,7 @@ import { IUserRoot } from "../redux/reducers/user";
 import { clearErrors, loadUser, updateItems } from "../actions/user";
 import { Link } from "react-router-dom";
 import Button from "../components/modules/Button";
+import TopUp from "../components/modules/TopUp";
 
 export default function WishList() {
   const { user } = useSelector((state: RootState) => state.user) as IUserRoot;
@@ -36,9 +37,10 @@ export default function WishList() {
   return (
     <>
       <NavBar />
+      <TopUp />
       <CategoryHeader label="Danh sách yêu thích" path="Danh sách yêu thích" />
       <div className="container mx-auto flex justify-center items-start flex-wrap  gap-10 my-20">
-        {user ? (
+        {user ? (wishList as CartItem[]).length > 0 ? (
           <div className=" w-[50rem] overflow-x-scroll">
             <div className="relative overflow-x-scroll px-2 ">
               <table className="w-full">
@@ -65,6 +67,12 @@ export default function WishList() {
                   <CartBox onRemove={removeItem} {...cart} />
                 ))}
               </table>
+            </div>
+          </div>
+        ) :  (
+          <div className="flex flex-grow items-center justify-center text-center w-full">
+            <div className="flex flex-col items-center">
+              <p className="text-3xl font-semibold mb-6">Không có sản phẩm.</p>
             </div>
           </div>
         ) : (

@@ -98,11 +98,11 @@ export const createProduct = asyncHandler(async (req: Request, res: Response) =>
 });
 
 // @desc    Cập nhật sản phẩm
-// @route   PUT /api/products/:id
+// @route    POST /api/products/update
 // @access  Private/Admin
 
 export const updateProduct = asyncHandler(async (req: Request, res: Response) => {
-  const product: ProductModel = req.body;
+  const { product } = req.body;
 
   const imagesLinks = [];
 
@@ -122,11 +122,19 @@ export const updateProduct = asyncHandler(async (req: Request, res: Response) =>
     runValidators: true,
     useUnified: false,
   });
-  res.status(201).json({
-    success: true,
-    message: "Đã cập nhật sản phẩm",
-    data: newProduct,
-  });
+  if (newProduct != null) {
+    res.status(201).json({
+      success: true,
+      message: "Đã cập nhật sản phẩm",
+      data: newProduct,
+    });
+  }
+  else {
+    res.status(400).json({
+      success: false,
+      message: "Cập nhật sản phẩm thất bại",
+    });
+  }
 });
 
 // @desc    Xoá 1 sản phẩm

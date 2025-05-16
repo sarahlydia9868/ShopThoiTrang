@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { IUserRoot } from "../redux/reducers/user";
 import { clearErrors, loadUser, updateItems } from "../actions/user";
 import { Link } from "react-router-dom";
+import TopUp from "../components/modules/TopUp";
 
 export default function Cart() {
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -46,9 +47,10 @@ export default function Cart() {
   return (
     <>
       <NavBar />
+      <TopUp />
       <CategoryHeader label="Giỏ Hàng" path="giỏ hàng" />
       <div className="container mx-auto flex justify-center items-start flex-wrap  gap-10 my-20">
-        {user ? (
+        {user ? ((cart as CartItem[]).length > 0) ? (
           <>
             <div className=" w-[50rem] overflow-x-scroll">
               <div className="relative overflow-x-scroll px-2 ">
@@ -72,7 +74,7 @@ export default function Cart() {
                       </th>
                     </tr>
                   </thead>
-                  {cart.map((cart: CartItem) => (
+                  {(cart as CartItem[]).map((cart: CartItem) => (
                     <CartBox onRemove={removeItem} {...cart} />
                   ))}
                 </table>
@@ -86,7 +88,7 @@ export default function Cart() {
                 </div>
                 <div className=" flex justify-between items-center  w-full">
                   <div className=" border-1 rounded-2xl border-black  p-3">
-                    <ProductTransportation title="Mi ễn Phí" text="Vận Chuyển" icon={<TbTruckDelivery className=" text-4xl" />} />
+                    <ProductTransportation title="Miễn Phí" text="Vận Chuyển" icon={<TbTruckDelivery className=" text-4xl" />} />
                   </div>
                   <div className="  border-1 rounded-2xl border-black p-3">
                     <ProductTransportation title="Hoàn Hàng" text="7 Ngày" icon={<TbBox className=" text-4xl" />} />
@@ -110,6 +112,12 @@ export default function Cart() {
               </div>
             </div>
           </>
+        ) :  (
+          <div className="flex flex-grow items-center justify-center text-center w-full">
+            <div className="flex flex-col items-center">
+              <p className="text-3xl font-semibold mb-6">Không có sản phẩm.</p>
+            </div>
+          </div>
         ) : (
           <div className="flex flex-grow items-center justify-center text-center w-full">
             <div className="flex flex-col items-center">
@@ -119,7 +127,7 @@ export default function Cart() {
               </Link>
             </div>
           </div>
-        )}
+        ) }
       </div>
       <Footer />
     </>

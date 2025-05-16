@@ -10,6 +10,7 @@ import { Link, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { FcOk } from "react-icons/fc";
+import TopUp from "../../components/modules/TopUp";
 
 export default function OrderCancel() {
   const { orderID } = useParams();
@@ -33,6 +34,7 @@ export default function OrderCancel() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Huỷ đơn hàng" path="Cài đặt tài khoản" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

@@ -1,5 +1,6 @@
 import Footer from "../../components/Footer";
 import CategoryHeader from "../../components/modules/CategoryHeader";
+import TopUp from "../../components/modules/TopUp";
 import NavBar from "../../components/NavBar";
 import Panel from "../../components/Panel";
 
@@ -7,6 +8,7 @@ export default function Review() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Đánh giá" path="Bảng điều khiển" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

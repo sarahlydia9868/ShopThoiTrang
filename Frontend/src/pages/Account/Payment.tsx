@@ -6,6 +6,7 @@ import Panel from "../../components/Panel";
 import FormInput from "../../components/modules/FormInput";
 import { FaRegCreditCard } from "react-icons/fa6";
 import Button from "../../components/modules/Button";
+import TopUp from "../../components/modules/TopUp";
 
 export default function Payment() {
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -20,6 +21,7 @@ export default function Payment() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Ngân hàng" path="Tài khoản" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

@@ -99,6 +99,26 @@ export const updateOrder = (id: string, progress: string) => async (dispatch: (a
   }
 };
 
+export const sendOrderMail = (userID: string, title: string, content: string) => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
+  try {
+    dispatch({ type: OrderConstants.ORDER_MAIL_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post(`/api/orders/send-mail`, {userID, title, content}, config);
+
+    dispatch({ type: OrderConstants.ORDER_MAIL_SUCCESS, payload: data.success });
+  } catch (error: any) {
+    dispatch({
+      type: OrderConstants.ORDER_MAIL_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Delete Order
 export const deleteOrder = (id) => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
   try {

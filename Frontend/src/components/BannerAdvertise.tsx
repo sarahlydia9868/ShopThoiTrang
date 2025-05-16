@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import Button from "./modules/Button";
 
 export default function BannerAdvertise() {
+  const scrollToUpHandler = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <div
       data-aos="fade-up"
@@ -16,7 +19,7 @@ export default function BannerAdvertise() {
                 Mùa Hè
               </span>
               <span className=" text-8xl uppercase">2025</span>
-              <Link to="/shop-dam">
+              <Link to="/shop/dam" onClick={scrollToUpHandler}>
                 <Button text="Mua ngay" padding="px-8 py-3" />
               </Link>
             </div>
@@ -28,7 +31,7 @@ export default function BannerAdvertise() {
             <span className=" text-3xl lg:text-6xl max-w-96 uppercase">
               Bộ sưu tập Mùa Hè
             </span>
-            <Link to="/shop-ao">
+            <Link to="/shop/ao" onClick={scrollToUpHandler}>
               <Button text="Mua ngay" padding="px-8 py-3" />
             </Link>
           </div>

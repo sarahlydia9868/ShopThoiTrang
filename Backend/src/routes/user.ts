@@ -4,9 +4,11 @@ import { admin, auth } from "../middleware/auth";
 
 const router = express.Router();
 
+router.route("/check-register").post(userController.checkRegister);
 router.route("/register").post(userController.register);
 router.route("/login").post(userController.login);
 router.route("/logout").get(userController.logout);
+//router.route("/set-token/:id").get(userController.setToken);
 router.route("/promote").post(auth, admin, userController.promoteUser);
 router.route("/send-code").post(userController.sendCodePassword);
 router.route("/verify-code").post(userController.verifyCode);

@@ -8,9 +8,14 @@ interface INavBarLink {
 }
 
 export default function NavBarLink({ text, path, dropDownDatas }: INavBarLink) {
+  
+    const scrollToUpHandler = () => {
+      window.scrollTo(0, 0);
+    };
+  
   return (
     <div className="relative group">
-      <Link to={path}>
+      <Link to={path} onClick={scrollToUpHandler}>
         <span
           className={`flex justify-center items-center tracking-wider hover:text-red-500 font-semibold transition-colors duration-300 ease-in-out  ${
             !dropDownDatas &&

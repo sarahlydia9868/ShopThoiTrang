@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { myOrders } from "../../actions/order";
 import { IMyOrderRoot } from "../../redux/reducers/order";
 import { IUserRoot } from "../../redux/reducers/user";
+import TopUp from "../../components/modules/TopUp";
 
 export const getStatusStyle = (status: string) => {
   switch (status) {
@@ -46,6 +47,7 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Đơn hàng" path="Bảng điều khiển" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

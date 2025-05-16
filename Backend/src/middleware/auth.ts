@@ -14,7 +14,8 @@ export interface DataStoredInToken {
 }
 
 export const auth = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
-  const token = store2.get("token");
+ // const token = store2.get("token");
+ const {token} = await req.cookies;
   if (!token) {
     res.status(401).json({ message: "Không có token" });
   } else {

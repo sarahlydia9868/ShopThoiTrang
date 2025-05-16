@@ -25,11 +25,11 @@ export default function RelatedProducts({ category }: IRelatedProducts) {
   }, [dispatch, category, error]);
 
   const link = {
-    "Đầm": "shop/dam",
-    "Áo": "shop/ao",
-    "Quần": "shop/quan",
-    "Chân Váy": "shop/chan-vay",
-    "Áo Khoác": "shop/ao-khoac",
+    "Đầm": "/shop/dam",
+    "Áo": "/shop/ao",
+    "Quần": "/shop/quan",
+    "Chân Váy": "/shop/chan-vay",
+    "Áo Khoác": "/shop/ao-khoac",
   };
   let sildesMax = products?.length! > 4 ? 4 : products?.length! - 1;
   const getSildesMax = (value: number, f: number) => {
@@ -38,11 +38,14 @@ export default function RelatedProducts({ category }: IRelatedProducts) {
     }
     return value - f;
   };
+  const scrollToUpHandler = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <div className=" w-full">
       <div className=" flex justify-between  items-center w-full ">
         <SectionHeader text="Sản phẩm liên quan" />
-        <Link to={link[category]}>
+        <Link to={link[category]} onClick={scrollToUpHandler}>
           <span className=" flex justify-center items-center text-sm font-bold capitalize cursor-pointer">
             Xem tất cả sản phẩm
             <MdKeyboardArrowRight className=" text-xl mb-0.5" />
@@ -75,7 +78,7 @@ export default function RelatedProducts({ category }: IRelatedProducts) {
         >
           {products?.map((product: ProductModel) => (
             <SwiperSlide>
-              <ProductBox id={product._id} {...product} />
+              <ProductBox id={product._id} enableQuickView = {false} {...product} />
             </SwiperSlide>
           ))}
         </Swiper>

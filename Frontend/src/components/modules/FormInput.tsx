@@ -4,7 +4,7 @@ interface IFormInput {
   label?: string;
   type: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   onChange?: (e: any) => void;
 }
 
@@ -25,6 +25,7 @@ export default function FormInput({ label, type, placeholder, value, onChange }:
       <span style={{ fontWeight: "bold" }}>{label}</span>
       <input
         type={type}
+        value={value}
         id="text"
         min={0}
         placeholder={placeholder}
@@ -37,6 +38,7 @@ export default function FormInput({ label, type, placeholder, value, onChange }:
       <span style={{ fontWeight: "bold" }}>{label}</span>
       <input
         type={type}
+        value={value}
         id="number"
         min={0}
         placeholder={placeholder}
@@ -63,6 +65,7 @@ export default function FormInput({ label, type, placeholder, value, onChange }:
       <textarea
         className="w-full h-24 outline-hidden p-3 border-1 border-black placeholder:text-zinc-600 rounded-lg placeholder:text-sm  text-black focus:bg-primary transition-colors duration-500 bg-white"
         placeholder={placeholder}
+        value={value}
         onChange={(e) => onChange && onChange(e)}
       ></textarea>
     </label>

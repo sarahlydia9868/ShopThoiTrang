@@ -7,11 +7,10 @@ import cloudinary from "cloudinary";
 import generateToken from "../util/token";
 import { sendMail } from "../util/mail";
 
-// @desc    Đăng kí người dùng mới
-// @route   POST /api/users/register
-// @access  Public
-export const register = asyncHandler(async (req: any, res: Response) => {
+export const checkRegister = asyncHandler(async (req: any, res: Response) => {
+
   const { username, email, password } = req.body;
+  
 
   if (!username || username.trim() === "") {
     res.status(422).json({ message: "Tên đăng nhập không được để trống" });
@@ -47,6 +46,50 @@ export const register = asyncHandler(async (req: any, res: Response) => {
     res.status(500).json({ message: "Email đã được xử dụng" });
     return;
   }
+
+  try {
+    const randomCode = Math.floor(100000 + Math.random() * 900000);
+
+    await sendMail({
+      email: email,
+      subject: "Mã xác thực đăng kí tài khoản",
+      html: `<!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirmation Code</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+        <div style="max-width: 400px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; margin: 0 auto;">
+            <p style="font-size: 18px;">Xin chào ${username},</p>
+            <p style="font-size: 16px;">Đây là mã xác nhận bạn yêu cầu:</p>
+            <p style="font-size: 28px; font-weight: bold; margin: 10px 0;">${randomCode}</p>
+            <p style="font-size: 14px; color: #666;">Nếu bạn không yêu cầu điều này, bạn có thể bỏ qua email này hoặc cho chúng tôi biết.</p>
+            <p style="margin-top: 30px;">Cảm ơn,</p>
+            <p style="font-weight: bold;">Fashin Store</p>
+        </div>
+    </body>
+    </html>`,
+    });
+    res.status(200).json({
+      message: "Đã gửi mã xác thực đến email của bạn",
+    });
+    store2.set("code", randomCode, true);
+  } catch (ex) {
+    res.status(400).json({
+      message: "Không tìm thấy tài khoản",
+    });
+  }
+
+});
+
+// @desc    Đăng kí người dùng mới
+// @route   POST /api/users/register
+// @access  Public
+export const register = asyncHandler(async (req: any, res: Response) => {
+  const { username, email, password } = req.body;
+
 
   const name = username;
   const address: ShippingAddress[] = [];
@@ -91,11 +134,27 @@ export const register = asyncHandler(async (req: any, res: Response) => {
         wishList: newUser.wishList,
       },
     };
-    store2.set("token", generateToken(user._id));
-    res.status(200).json(userPayLoad);
+    res.status(200).cookie("token", generateToken(user._id), {
+      httpOnly: true,        
+      secure: false,         
+      sameSite: 'lax',       
+      maxAge: 60 * 60 * 60 * 1000, 
+    }).json(userPayLoad);
   } else {
     res.status(500).json({ message: "Đăng kí thất bại" });
   }
+});
+
+export const setToken = asyncHandler(async (req: any, res: any) => {
+  const {id} = req.params;
+  const token = generateToken(id);
+  res.status(200).cookie("token", token, {
+      httpOnly: true,        
+      secure: false,         
+      sameSite: 'lax',       
+      maxAge: 60 * 60 * 60 * 1000, 
+    })
+    .json({ message: 'Cookie đã được set' });
 });
 
 // @desc    Đăng nhập
@@ -141,8 +200,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
           wishList: user.wishList,
         },
       };
-      store2.set("token", generateToken(user._id));
-      res.status(200).json(userPayLoad);
+      res.status(200).cookie("token", generateToken(user._id), {
+        httpOnly: true,        
+        secure: false,         
+        sameSite: 'lax',       
+        maxAge: 60 * 60 * 60 * 1000, 
+      }).json(userPayLoad);
     } else {
       res.status(500).json({ message: "Sai mật khẩu" });
     }
@@ -155,8 +218,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 // @route   Get /api/users/logout
 // @access  Admin
 
+
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  store2.remove("token");
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
   res.status(200).json({ message: "Đăng xuất thành công" });
 });
 
@@ -337,7 +404,7 @@ export const sendCodePassword = asyncHandler(async (req: Request, res: Response)
       email: user.email,
       subject: "Mã xác thực thay đổi mật khẩu",
       html: `<!DOCTYPE html>
-    <html lang="en">
+    <html lang="vi">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -421,6 +488,7 @@ export const verifyCodePassword = asyncHandler(async (req: Request, res: Respons
 });
 
 export default {
+  checkRegister,
   register,
   login,
   logout,

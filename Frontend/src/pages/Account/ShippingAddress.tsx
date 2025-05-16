@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import ToastAlert from "../../components/modules/ToastAlert";
 import { useNavigate } from "react-router-dom";
 import { UserConstants } from "../../constans/user";
+import TopUp from "../../components/modules/TopUp";
 
 export default function ShippingAddress() {
   //api from: https://github.com/qtv100291/Vietnam-administrative-division-json-server
@@ -139,12 +140,26 @@ export default function ShippingAddress() {
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.user);
 
+
+  const isValidPhoneNumber = (phone: string) =>  {
+    const regex = /^0\d{9}$/;
+    return regex.test(phone);
+  }
+
+
   const addShippingAddress = (e: any) => {
     e.preventDefault();
     if (!name || !phoneNumber || provinceValue === "0" || districtValue === "0" || communeValue === "0" || !specificAddress) {
       dispatch({
         type: UserConstants.UPDATE_PROFILE_FAIL,
         message: "Vui lòng nhập đủ thông tin",
+      });
+      return;
+    }
+    if (!isValidPhoneNumber(phoneNumber.toString())) {
+      dispatch({
+        type: UserConstants.UPDATE_PROFILE_FAIL,
+        message: "Số điện thoại không đúng, yêu cầu đủ 10 số",
       });
       return;
     }
@@ -203,6 +218,7 @@ export default function ShippingAddress() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Địa chỉ" path="Cài đặt tài khoản" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

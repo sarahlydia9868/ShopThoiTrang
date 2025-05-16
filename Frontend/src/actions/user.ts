@@ -1,11 +1,20 @@
 import axios from "../utils/axios";
 import { UserConstants } from "../constans/user";
+
+// export const setToken = (id: string) => async () => {
+//   try {
+//      await axios.get(`/api/users/set-token/${id}`);
+//   }
+//   catch (error: any) {}
+// }
+
 // Login
 export const login = (username: string, password: string) => async (dispatch: (arg0: { type: UserConstants; payload?: UserModel; message?: string }) => void) => {
   try {
     dispatch({ type: UserConstants.LOGIN_REQUEST });
     const config = { headers: { "Content-Type": "application/json" } };
     const { data } = (await axios.post(`/api/users/login`, { username, password }, config)) as { data: UserPayLoad };
+   // await axios.get(`/api/users/set-token/${data.data._id}`);
     dispatch({ type: UserConstants.LOGIN_SUCCESS, payload: data.data, message: data.message });
   } catch (error: any) {
     dispatch({
@@ -30,12 +39,27 @@ export const register = (username: string, email: string, password: string) => a
   }
 };
 
+export const checkRegister = (username: string, email: string, password: string) => async (dispatch: (arg0: { type: UserConstants; payload?: UserModel; message?: string }) => void) => {
+  try {
+    dispatch({ type: UserConstants.REGISTER_USER_REQUEST });
+    const config = { headers: { "Content-Type": "application/json" } };
+    const { data } = (await axios.post(`/api/users/check-register`, { username, email, password }, config)) as { data: UserPayLoad };
+    dispatch({ type: UserConstants.REGISTER_USER_CHECK_SUCCESS, payload: data.data, message: data.message });
+  } catch (error: any) {
+    dispatch({
+      type: UserConstants.REGISTER_USER_FAIL,
+      message: error.response.data.message,
+    });
+  }
+};
+
 // Load User
 export const loadUser = () => async (dispatch: (arg0: { type: UserConstants; payload?: UserModel; message?: string }) => void) => {
   try {
     dispatch({ type: UserConstants.LOAD_USER_REQUEST });
     // eslint-disable-next-line
-    const { data } = (await axios.get(`/api/users/me`)) as { data: UserPayLoad };
+    const { data } = (await axios.get(`/api/users/me`, {withCredentials: true})) as { data: UserPayLoad };
+
     dispatch({ type: UserConstants.LOAD_USER_SUCCESS, payload: data.data, message: data.message });
   } catch (error: any) {
     dispatch({ type: UserConstants.LOAD_USER_FAIL, payload: error.response.data.message });

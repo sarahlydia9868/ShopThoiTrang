@@ -33,6 +33,7 @@ import AdminUsers from "./components/AdminUsers";
 import AdminProducts from "./components/AdminProducts";
 import AdminCollections from "./components/AdminCollections";
 import AdminOrders from "./components/AdminOrders";
+import AdminProductModify from "./components/AdminProductModify";
 //TODO: change routes
 const routes = [
   { path: "/", element: <Index /> },
@@ -76,6 +77,7 @@ const routes = [
       { path: "users", element: <AdminUsers /> },
       { path: "orders", element: <AdminOrders /> },
       { path: "products", element: <AdminProducts /> },
+      { path: "product-modify/:productID", element: <AdminProductModify /> },
       { path: "collections", element: <AdminCollections /> },
     ],
   },

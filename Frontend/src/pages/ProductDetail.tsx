@@ -26,6 +26,7 @@ import { clearErrors, loadUser } from "../actions/user";
 import { LiaTimesCircle } from "react-icons/lia";
 import { updateItems } from "../actions/user";
 import { IProfileRoot, IUserRoot } from "../redux/reducers/user";
+import TopUp from "../components/modules/TopUp";
 
 export default function ProductDetail() {
   const { productID } = useParams();
@@ -156,6 +157,7 @@ export default function ProductDetail() {
   return (
     <>
       <NavBar />
+      <TopUp />
       <div className="container mx-auto px-5">
         <div className="flex justify-start items-start mt-5">
           <BreadCrumb path="Thông tin sản phẩm" />

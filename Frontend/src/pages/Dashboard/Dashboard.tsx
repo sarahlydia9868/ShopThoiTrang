@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { logout } from "../../actions/user";
 import Modal from "../../components/modules/Modal";
 import { IMyOrderRoot } from "../../redux/reducers/order";
+import TopUp from "../../components/modules/TopUp";
 
 export default function Dashboard() {
 
@@ -63,6 +64,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Bảng điều khiển" path="Bảng điều khiển" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

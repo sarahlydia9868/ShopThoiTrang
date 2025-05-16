@@ -9,8 +9,7 @@ export interface IProductProperties {
   category?: string;
 }
 
-export const getProduct =
-  ({ keyword = "", currentPage = 1, sort = "createAt", resultPerPage = 9, category = undefined }: IProductProperties) =>
+export const getProduct = ({ keyword = "", currentPage = 1, sort = "createAt", resultPerPage = 9, category = undefined }: IProductProperties) =>
   async (dispatch: (arg0: { type: ProductConstants; payload?: ProductModel[]; productsCount?: number, currentCount?: number }) => void) => {
     try {
       dispatch({
@@ -143,24 +142,24 @@ export const deleteProduct = (id: string) => async (dispatch: (arg0: { type: Pro
 };
 
 // Update Product
-export const updateProduct = (id: any, productData: any) => async (dispatch: (arg0: { type: ProductConstants; payload?: any }) => void) => {
+export const updateProduct = (product: ProductModel) => async (dispatch: (arg0: { type: ProductConstants; message?: string }) => void) => {
   try {
-    dispatch({ type: ProductConstants.UPDATE_PRODUCT_REQUEST });
+    dispatch({ type: ProductConstants.NEW_PRODUCT_REQUEST });
 
     const config = {
       headers: { "Content-Type": "application/json" },
     };
 
-    const { data } = await axios.put(`/api/v2/product/${id}`, productData, config);
+    const { data } = await axios.post(`/api/products/update`, { product }, config);
 
     dispatch({
-      type: ProductConstants.UPDATE_PRODUCT_SUCCESS,
-      payload: data.success,
+      type: ProductConstants.NEW_PRODUCT_SUCCESS,
+      message: data.message,
     });
   } catch (error: any) {
     dispatch({
-      type: ProductConstants.UPDATE_PRODUCT_FAIL,
-      payload: error.response.data.message,
+      type: ProductConstants.NEW_PRODUCT_FAIL,
+      message: error.response.data.message,
     });
   }
 };
@@ -202,6 +201,13 @@ export const deleteReviews = (reviewId: any, productId: any) => async (dispatch:
     });
   }
 };
+
+export const reset = () => async (dispatch: (arg0: { type: ProductConstants }) => void) => {
+  dispatch({
+    type: ProductConstants.NEW_PRODUCT_RESET,
+  });
+};
+
 
 //   Clearing errors
 export const clearErrors = () => async (dispatch: (arg0: { type: ProductConstants }) => void) => {

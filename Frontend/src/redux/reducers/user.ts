@@ -3,6 +3,7 @@ import { UserConstants } from "../../constans/user";
 export interface IUserRoot {
   loading: boolean;
   isAuthenticated: boolean;
+  isCheckSignUpOk?: boolean;
   error?: boolean;
   message?: string;
   user?: UserModel | null;
@@ -24,6 +25,15 @@ const user = (state = {}, action: { type: UserConstants; payload?: UserModel; me
         ...state,
         loading: false,
         isAuthenticated: true,
+        user: action.payload,
+        message: action.message,
+      };
+    case UserConstants.REGISTER_USER_CHECK_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        isCheckSignUpOk: true,
         user: action.payload,
         message: action.message,
       };

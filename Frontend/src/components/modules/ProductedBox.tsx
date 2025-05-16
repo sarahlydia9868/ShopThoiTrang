@@ -7,10 +7,14 @@ interface IProductedBox {
 }
 
 export default function ProductedBox({ bgUrl, title, path }: IProductedBox) {
+
+  const scrollToUpHandler = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <div className=" flex flex-col">
       <div className=" relative overflow-hidden w-80 rounded-3xl group">
-        <Link to={path}>
+        <Link to={path} onClick={scrollToUpHandler}>
           <img
             src={bgUrl}
             alt="bg-sponsored"

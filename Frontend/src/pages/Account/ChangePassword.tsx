@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { clearErrors, sendCode, verifyCodePassword } from "../../actions/user";
 import ToastAlert from "../../components/modules/ToastAlert";
 import { UserConstants } from "../../constans/user";
+import TopUp from "../../components/modules/TopUp";
 
 export default function ChangePassword() {
   const [countdown, setCountdown] = useState<number>(0);
@@ -95,6 +96,7 @@ export default function ChangePassword() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Thay đổi mật khẩu" path="Cài đặt tài khoản" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

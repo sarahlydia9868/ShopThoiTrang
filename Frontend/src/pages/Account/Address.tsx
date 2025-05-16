@@ -12,6 +12,7 @@ import AddressForm from "../../components/modules/AddressForm";
 import { useEffect, useState } from "react";
 import { clearErrors, loadUser, updateProfile } from "../../actions/user";
 import ToastAlert from "../../components/modules/ToastAlert";
+import TopUp from "../../components/modules/TopUp";
 
 export default function Address() {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,10 @@ export default function Address() {
 
   const { error, loading, isUpdated, message } = useSelector((state: RootState) => state.profile);
   const address = user?.address;
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
   useEffect(() => {
     if (error && message) {
       dispatch(clearErrors());
@@ -74,6 +79,7 @@ export default function Address() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <div className="relative">
         <CategoryHeader label="Địa chỉ" path="Cài đặt tài khoản" />
         <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">

@@ -1,4 +1,6 @@
 import { MdDelete } from "react-icons/md";
+import { FaWrench } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export interface IProductTable {
   product: ProductModel;
@@ -8,10 +10,10 @@ export interface IProductTable {
 export default function ProductTable({ product, openDeleteProductModal }: IProductTable) {
   return (
     <tr className=" border-b border-primary odd:hover:bg-primary even:hover:bg-secondary hover:text-black transition-colors duration-200">
-      <th className="overflow-hidden px-6 py-4">
+      <th className="overflow-hidden px-3 py-4">
         <div className="relative h-30">
           <img src={product.images[0].url} alt="Left Image" className="absolute top-0 left-0 w-3/4 object-cover rounded-lg shadow-lg" />
-          {product.images[1] ? <img src={ product.images[1].url} alt="Right Image" className="absolute bottom-0 right-0 w-3/4 object-cover rounded-lg shadow-lg" /> : <></>} 
+          {product.images[1] ? <img src={product.images[1].url} alt="Right Image" className="absolute bottom-0 right-0 w-3/4 object-cover rounded-lg shadow-lg" /> : <></>}
         </div>
       </th>
       <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap ">
@@ -38,8 +40,13 @@ export default function ProductTable({ product, openDeleteProductModal }: IProdu
       </td>
       <td className="px-6 py-4">{product.category}</td>
       <td className="px-6 py-4">{product.collectionName ?? "Không"}</td>
-      <td className="pl-6 py-4 " onClick={() => openDeleteProductModal(product._id)}>
-        <MdDelete className=" text-2xl hover:text-rose-600 transition-colors cursor-pointer" />
+      <td className="px-4 py-4 align-middle">
+        <div className="flex items-center justify-center gap-2">
+          <Link to={`/admin/product-modify/${product._id}`}>
+            <FaWrench className="text-2xl hover:text-rose-600 transition-colors cursor-pointer" />
+          </Link>
+          <MdDelete className="text-2xl hover:text-rose-600 transition-colors cursor-pointer" onClick={() => openDeleteProductModal(product._id)} />
+        </div>
       </td>
     </tr>
   );

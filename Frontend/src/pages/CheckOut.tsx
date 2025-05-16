@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ToastAlert from "../components/modules/ToastAlert";
 import { clearErrors, createOrder } from "../actions/order";
 import { updateItems } from "../actions/user";
+import TopUp from "../components/modules/TopUp";
 
 export default function CheckOut() {
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -68,6 +69,7 @@ export default function CheckOut() {
   return (
     <>
       <NavBar />
+      <TopUp />
       <CategoryHeader label="Thanh Toán" path="Thanh toán" />
       <div className="container mx-auto flex justify-center items-start flex-wrap gap-10 my-20">
         <div className="flex-1/2">
@@ -78,7 +80,7 @@ export default function CheckOut() {
               </div>
             ) : (
               address?.map((shippingAddres: ShippingAddress, index: number) => (
-                <div key={index} className={`border p-4 rounded-xl px-10 bg-white ${indexAddress === index ? "border-red-500" : "border-gray-300"}`}>
+                <div key={index} className={`border p-4 rounded-xl px-10 ${indexAddress === index ? "bg-rose-100 border-red-500" : "border-gray-300  bg-white"}`}>
                   <h2 className="text-lg font-semibold mb-2">Địa chỉ giao hàng</h2>
                   <p>{shippingAddres.name}</p>
                   <p>Sđt: {shippingAddres.phoneNumber}</p>

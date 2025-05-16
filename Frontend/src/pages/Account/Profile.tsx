@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { useEffect, useState } from "react";
 import { clearErrors, loadUser, updateProfile } from "../../actions/user";
 import ToastAlert from "../../components/modules/ToastAlert";
+import TopUp from "../../components/modules/TopUp";
 
 export default function Profile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -82,6 +83,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen">
       <NavBar />
+      <TopUp />
       <CategoryHeader label="Hồ Sơ Của Tôi" path="Cài đặt tài khoản" />
       <div className="container mx-auto px-30 relative flex items-start py-10 -mt-30 z-10 gap-6">
         <Panel />

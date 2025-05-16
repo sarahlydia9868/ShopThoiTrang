@@ -13,6 +13,7 @@ function App() {
   }, []);
 
   return (
+    
     <Provider store={store}>
       <AOSInit />
       {router}

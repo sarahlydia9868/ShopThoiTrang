@@ -53,6 +53,10 @@ export default function Shop({ label, category }: IShop) {
     setSearchParams({ page: newPage.toString() });
   };
 
+  const scrollToUpHandler = () => {
+    window.scrollTo(0, 0);
+  };
+
   useEffect(() => {
     if (error) {
       dispatch(clearErrors());
@@ -139,14 +143,21 @@ export default function Shop({ label, category }: IShop) {
             } trên ${currentCount} sản phảm`}</span>
             <div className="">
               <span
-                onClick={setPreviousPage}
+                onClick={() => {
+                  setPreviousPage();
+                  scrollToUpHandler();
+                }}
+                
                 className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300"
               >
                 Trước
               </span>
 
               <span
-                onClick={setNextPage}
+                onClick={() => { 
+                  setNextPage();
+                  scrollToUpHandler();
+                }}
                 className=" mx-1 border-1 border-black rounded-full px-3 py-1 lg:px-6 lg:py-2 hover:bg-black hover:text-white cursor-pointer transition-colors duration-300"
               >
                 Sau

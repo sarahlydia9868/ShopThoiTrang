@@ -8,6 +8,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { ICollectionDetailRoot } from "../redux/reducers/collection";
 import { getCollectionDetail } from "../actions/collection";
 import { formatDate } from "./Dashboard/Orders";
+import TopUp from "../components/modules/TopUp";
 
 export default function CollectionDetail() {
   const { collectionID } = useParams();
@@ -20,6 +21,7 @@ export default function CollectionDetail() {
     <>
       <div className="flex flex-col min-h-screen">
         <NavBar />
+        <TopUp />
         <div className="flex flex-grow w-full px-100 mt-15">
           <div className="flex flex-col items-start">
             <h1 className="text-3xl  items-center justify-center text-center font-bold mb-2 text-red-500">{collection?.title}</h1>

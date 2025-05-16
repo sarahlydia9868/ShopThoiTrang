@@ -7,9 +7,10 @@ import ToastAlert from "./modules/ToastAlert";
 import Modal from "./modules/Modal";
 import { MdClose, MdDelete } from "react-icons/md";
 import { AppDispatch, RootState } from "../redux/store";
-import { clearErrors, getAllOrders, updateOrder } from "../actions/order";
+import { clearErrors, getAllOrders, sendOrderMail, updateOrder } from "../actions/order";
 import { IOrdersRoot } from "../redux/reducers/order";
 import { formatDate, getStatusStyle } from "../pages/Dashboard/Orders";
+import { IUserRoot, IUsersRoot } from "../redux/reducers/user";
 
 export interface ICollections {
   id: number;
@@ -19,13 +20,13 @@ export interface ICollections {
 
 export default function AdminOrders() {
   const dispatch = useDispatch<AppDispatch>();
-
   const [toastAlertText, setToastAlertText] = useState<string>("");
   const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
   const [isToastAlertOK, setIsToastAlertOK] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { orders } = useSelector((state: RootState) => state.allOrders) as IOrdersRoot;
   const [cancelID, setOrderCancelID] = useState<string>("");
+  const [userCancelID, setUserCancelID] = useState<string>("");
   const [message, setNotifyMessage] = useState<string>("");
 
   const { isUpdated } = useSelector((state: RootState) => state.updateOrder);
@@ -47,21 +48,44 @@ export default function AdminOrders() {
   const closeModal = () => {
     setIsOpenModal(false);
   };
+  
+  
+  const sendMail = (userID: string, title: string, content: string) => {
+    dispatch(sendOrderMail(userID, title,  content));
+  }
+
+  
+  const date = new Date();
+  const format_time =  date.toLocaleString("vi-VN", {
+    day:    "2-digit",
+    month:  "2-digit",
+    year:   "numeric",
+    hour:   "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,      // 24h
+    timeZone: "Asia/Ho_Chi_Minh"
+  });
 
   const confirmModal = () => {
     setIsOpenModal(false);
     dispatch(updateOrder(cancelID!, "Đã huỷ"));
+    sendMail(userCancelID, `Đơn hàng #${cancelID} đã huỷ`, `Đơn hàng #${cancelID} của bạn đã bị huỷ vào ${format_time}. \nVui lòng đăng nhập vào Fashion Store để kiểm tra lại đơn hàng của bạn`);
     setNotifyMessage("Đã huỷ đơn hàng");
   };
 
-  const sendSubmit = (orderID: string) => {
+
+  const sendSubmit = (orderID: string, userID: string) => {
     dispatch(updateOrder(orderID!, "Đang giao hàng"));
+    sendMail(userID, `Đơn hàng #${orderID} đã xác nhận`, `Đơn hàng #${orderID} của bạn đã được xác nhận vào ${format_time}. \nVui lòng đăng nhập vào Fashion Store để theo dõi đơn hàng của bạn`);
+
     setNotifyMessage("Đã xác nhận đơn hàng");
   };
 
-  const openCancelOrderModal = async (orderID: string) => {
+  const openCancelOrderModal = async (orderID: string, userID: string) => {
     setIsOpenModal(true);
     setOrderCancelID(orderID);
+    setUserCancelID(userID);
   };
 
   return (
@@ -131,11 +155,11 @@ export default function AdminOrders() {
                         {order.progress !== "Đã huỷ" && order.progress !== "Đã giao" && (
                           <div className="flex gap-2">
                             {order.progress !== "Đang giao hàng" && (
-                              <button onClick={() => sendSubmit(order._id)}>
+                              <button onClick={() => sendSubmit(order._id, order.user)}>
                                 <Button text="Xác nhận" padding="px-2 py-1" />
                               </button>
                             )}
-                            <button onClick={() => openCancelOrderModal(order._id)}>
+                            <button onClick={() => openCancelOrderModal(order._id, order.user)}>
                               <Button text="Huỷ" padding="px-2 py-1" bgColor="black" />
                             </button>
                           </div>
