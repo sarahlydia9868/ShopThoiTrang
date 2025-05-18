@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import ToastAlert from "../components/modules/ToastAlert";
-import { clearErrors, createOrder } from "../actions/order";
+import { clearErrors, createOrder, createPaymentOrder } from "../actions/order";
 import { updateItems } from "../actions/user";
 import TopUp from "../components/modules/TopUp";
 
@@ -24,6 +24,10 @@ export default function CheckOut() {
 
   const { user } = useSelector((state: RootState) => state.user);
   const { order, message, success } = useSelector((state: RootState) => state.order);
+
+  const paymentStatus = useSelector((state: RootState) => state.payOrder);
+  const url = paymentStatus.url;
+  const paymentSuccess = paymentStatus.success;
 
   const address = user?.address;
   const cart = user?.cartItems ?? [];
@@ -45,10 +49,21 @@ export default function CheckOut() {
   }, [calcTotalPrice]);
 
   useEffect(() => {
+    if (paymentSuccess && url) {
+      window.location.replace(url);
+    }
+  }, [dispatch, paymentSuccess, url]);
+
+  useEffect(() => {
     if (success && message) {
       dispatch(clearErrors());
       dispatch(updateItems(user?._id, [], user?.wishList!));
-      navigate(`/account/order-confirmation/${order?._id}`);
+      if (payment === "Thanh toán qua VNPay") {
+        dispatch(createPaymentOrder(order!.totalPrice, order!._id, `${window.location.origin}/account/order-status/${order?._id}`));
+      }
+      else {
+        navigate(`/account/order-status/${order?._id}?vnp_TransactionStatus=00`);
+      }
     }
   }, [success, message, dispatch, navigate, order?._id]);
 
@@ -63,7 +78,10 @@ export default function CheckOut() {
       }, 3000);
       return;
     }
-    dispatch(createOrder(cart, address![shipping], totalPrice, user?._id));
+    // const paymentMethod = payment;
+    // const shippingMethod = shipping;
+   
+    dispatch(createOrder(cart, address![shipping], totalPrice,  user?._id));
   };
 
   return (

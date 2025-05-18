@@ -71,7 +71,6 @@ export default function Dashboard() {
           <Panel />
           <div className="mx-5 flex-1 p-8 rounded-3xl mt-30 border border-gray-300 bg-[#fdf7f2]">
             <div className="max-w-5xl mx-auto">
-              {/* Lời chào & liên kết đăng xuất */}
               <div className="mb-4">
                 <h1 className="text-xl font-bold">
                   Xin chào {user?.name ?? user?.username} (không phải {user?.name ?? user?.username}?{" "}
@@ -82,7 +81,6 @@ export default function Dashboard() {
                 </h1>
               </div>
 
-              {/* Thông tin giới thiệu & các link quan trọng */}
               <p className="mb-6 text-gray-700">
                 Từ bảng điều khiển tài khoản, bạn có thể xem{" "}
                 <Link to="/account/orders">

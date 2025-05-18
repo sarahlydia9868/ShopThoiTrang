@@ -3,6 +3,8 @@ import asyncHandler from "express-async-handler";
 import Order from "../model/order";
 import { sendMail } from "../util/mail";
 import User from "../model/user";
+import vnpay from "../util/vnpay";
+import { dateFormat, ProductCode, VnpLocale } from "vnpay";
 
 // @desc    Lấy thông tin tất cả đơn hàng
 // @route   Get /api/orders
@@ -38,7 +40,7 @@ export const getUserOrder = asyncHandler(async (req: any, res: Response) => {
 });
 
 // @desc    Thanh toán đơn hàng
-// @route   Put /api/orders/:id
+// @route   Post /api/orders/pay
 // @access  Private
 
 export const payOrder = asyncHandler(async (req: Request, res: Response) => {
@@ -47,9 +49,41 @@ export const payOrder = asyncHandler(async (req: Request, res: Response) => {
   if (order) {
     order.isPaid = true;
     const updatedOrder = await order.save();
-    res.status(200).json(updatedOrder);
+    res.status(200).json({
+      message: "Đã thanh toán đơn hàng",
+    });
   } else {
-    res.status(400).json({ message: "Không thành công" });
+    res.status(400).json({ message: "Không tìm thấy đơn hàng" });
+  }
+});
+
+// @desc    Thanh toán mã thanh toán đơn hàng
+// @route   Post /api/orders/create-payment
+// @access  Private
+
+export const createPaymentOrder = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { amount, orderID, returnUrl } = req.body;
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const paymentUrl = vnpay.buildPaymentUrl({
+      vnp_Amount: amount,
+      vnp_IpAddr: "127.0.0.1",
+      vnp_TxnRef: orderID,
+      vnp_OrderInfo: `Thanh toán đơn hàng ${orderID}`,
+      vnp_OrderType: ProductCode.Fashion,
+      vnp_ReturnUrl: returnUrl,
+      vnp_Locale: VnpLocale.VN,
+      vnp_CreateDate: dateFormat(new Date()),
+      vnp_ExpireDate: dateFormat(tomorrow),
+    });
+    res.status(200).json({
+      message: "Đã tạo url thanh toán đơn hàng",
+      data: paymentUrl,
+    });
+  } catch (ex: any) {
+    res.status(400).json({ message: "Lỗi tạo url thanh toán" });
   }
 });
 
@@ -138,20 +172,13 @@ export const createOrder = asyncHandler(async (req: any, res: Response) => {
 
 export const sendOrderMail = asyncHandler(async (req: any, res: Response) => {
   try {
-
-    const {userID, title, content } = req.body;
+    const { userID, title, content } = req.body;
 
     const user = await User.findById(userID);
 
+    const htmlContent = content.replace(/#(\w+)/g, '<span style="color:#f56565;font-weight:500">#$1</span>').replace(/\n/g, "<br/>");
 
-    const htmlContent = content
-  .replace(
-    /#(\w+)/g,
-    '<span style="color:#f56565;font-weight:500">#$1</span>'
-  )
-  .replace(/\n/g, '<br/>');
-
-const emailTemplate = `<!DOCTYPE html>
+    const emailTemplate = `<!DOCTYPE html>
     <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -183,14 +210,14 @@ const emailTemplate = `<!DOCTYPE html>
   }
 });
 
-
 export default {
   getOrderList,
   getUserOrder,
   payOrder,
+  createPaymentOrder,
   getOrderById,
   deleteOrder,
   createOrder,
   updateProgressOrder,
-  sendOrderMail
+  sendOrderMail,
 };

@@ -70,7 +70,9 @@ export default function OrderDetailPage() {
           <Panel />
           <div className="mx-5 flex-1 p-8 rounded-3xl mt-30 border border-gray-300 bg-[#fdf7f2]">
             {order ? (
+              
               <>
+                
                 <div className="space-y-4">
                   {(order?.cartItems! ?? []).map((cart: any, index) => (
                     <div key={index} className="flex items-center gap-4 border-b border-gray-200 last:border-0">
@@ -82,6 +84,17 @@ export default function OrderDetailPage() {
                     </div>
                   ))}
                 </div>
+                {/* <hr className="my-4 border-gray-300  border-dashed " />
+                <div className="grid grid-cols-2  gap-4 mb-6">
+                  <div>
+                    <p className="font-semibold mb-2">ID đơn hàng</p>
+                    <p>{orderID}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-2">Trạng thái đơn hàng</p>
+                    <span className={` text-white px-3 py-2 rounded-lg  ${getStatusStyle(order.progress)}`}>{order.progress}</span>
+                  </div>
+                </div> */}
                 <hr className="my-4 border-gray-300  border-dashed " />
                 <div className="grid grid-cols-2  gap-4 mb-6">
                   <div>
@@ -95,6 +108,20 @@ export default function OrderDetailPage() {
                     </p>
                   </div>
                 </div>
+                {/* <div className="grid grid-cols-2  gap-4 mb-6">
+                  <div>
+                    <p className="font-semibold">Phương thức vận chuyển</p>
+                    <p>
+                      {order.shippingMethod ? "Vận chuyển hoả tốc" : "Vận chuyển bình thường"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">Phương thức thanh toán</p>
+                    <p>
+                    {order.paymentURL ? "Thanh toán qua VNPay" : "Thanh toán khi nhận hàng"}
+                    </p>
+                  </div>
+                </div> */}
                 {orderProcess !== "Đã giao" && orderProcess !== "Đã huỷ" && (
                   <div className="flex items-center gap-4 mb-6" onClick={orderProcess === "Chờ xác nhận" ? cancelSubmit : orderSubmit}>
                     <Button text={orderProcess === "Chờ xác nhận" ? "Huỷ đơn hàng" : "Đã nhận hàng"} padding="px-4 py-2" bgColor="black"></Button>

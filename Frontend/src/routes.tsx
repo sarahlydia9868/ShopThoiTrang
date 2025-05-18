@@ -26,7 +26,7 @@ import Review from "./pages/Dashboard/Review";
 import ShippingAddress from "./pages/Account/ShippingAddress";
 import UserRoute from "./routes/UserRoute";
 import Checkout from "./pages/CheckOut";
-import OrderConfirmation from "./pages/OrderConfirmation";
+import OrderStatus from "./pages/OrderStatus";
 import AdminPanel from "./pages/AdminPanel";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminUsers from "./components/AdminUsers";
@@ -64,7 +64,7 @@ const routes = [
       { path: "check-out", element: <Checkout /> },
       { path: "order/:orderID", element: <OrdersDetail /> },
       { path: "order-cancel/:orderID", element: <OrderCancel /> },
-      { path: "order-confirmation/:orderID", element: <OrderConfirmation /> },
+      { path: "order-status/:orderID", element: <OrderStatus /> },
       { path: "return-request", element: <ReturnRequest /> },
       { path: "review", element: <Review /> },
     ],

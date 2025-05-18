@@ -53,7 +53,6 @@ export default function AdminOrders() {
   const sendMail = (userID: string, title: string, content: string) => {
     dispatch(sendOrderMail(userID, title,  content));
   }
-
   
   const date = new Date();
   const format_time =  date.toLocaleString("vi-VN", {

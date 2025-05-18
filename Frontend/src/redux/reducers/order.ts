@@ -141,7 +141,7 @@ const allOrders = (state = { orders: [] }, action: { type: OrderConstants; paylo
         loading: false,
         success: true,
         orders: action.payload,
-        message: action.message
+        message: action.message,
       };
 
     case OrderConstants.ALL_ORDERS_FAIL:
@@ -161,10 +161,10 @@ const allOrders = (state = { orders: [] }, action: { type: OrderConstants; paylo
 };
 
 export interface IUpdateOrderRoot {
-  loading?: boolean,
-  isUpdated?: boolean,
-  isDeleted?: boolean,
-  error?: boolean
+  loading?: boolean;
+  isUpdated?: boolean;
+  isDeleted?: boolean;
+  error?: boolean;
 }
 
 const updateOrder = (state = {}, action: { type: OrderConstants; payload?: OrderModel; message?: string }): IUpdateOrderRoot => {
@@ -219,10 +219,46 @@ const updateOrder = (state = {}, action: { type: OrderConstants; payload?: Order
   }
 };
 
+export interface IPayOrderRoot {
+  loading?: boolean;
+  error?: boolean;
+  url?: string;
+  message?: string;
+  success?: boolean;
+}
+
+const payOrder = (state = {}, action: { type: OrderConstants; payload?: string; message?: string }): IPayOrderRoot => {
+  switch (action.type) {
+    case OrderConstants.PAY_ORDER_SUCCESS: {
+      return {
+        url: action.payload,
+        message: action.message,
+        success: true,
+      };
+    }
+    case OrderConstants.UPDATE_ORDER_FAIL: {
+      return {
+        message: action.message,
+        success: false,
+      };
+    }
+    case OrderConstants.CLEAR_ERRORS:
+      return {
+        ...state,
+        success: false,
+        error: false,
+      };
+
+    default:
+      return state;
+  }
+};
+
 export default {
   newOrder,
   myOrders,
   orderDetails,
   allOrders,
   updateOrder,
+  payOrder,
 };

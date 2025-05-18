@@ -28,6 +28,8 @@ const orderSchema = new Schema<OrderModel>(
       commune: { type: String, required: true },
       specificAddress: { type: String, required: false },
     },
+    shippingMethod: { type: Number, required: false },
+    paymentURL: { type: String, required: false },
     totalPrice: { type: Number, required: true, default: 0 },
     isPaid: { type: Boolean, required: true, default: false },
   },

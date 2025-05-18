@@ -13,6 +13,8 @@ import TopUp from "../../components/modules/TopUp";
 
 export const getStatusStyle = (status: string) => {
   switch (status) {
+    case "Chưa thanh toán":
+      return "bg-yellow-500";
     case "Đang giao hàng":
       return "bg-sky-500";
     case "Đã huỷ":

@@ -21,7 +21,7 @@ export default function ProductTable({ product, openDeleteProductModal }: IProdu
       </th>
       <td className="px-6 py-4 text-red-500">{product.price.toLocaleString("vi-VN")}đ</td>
       <td className="px-6 py-4">{product.offerPrice.toLocaleString("vi-VN")}đ</td>
-
+      <td className="px-6 py-4">{product.qty}</td>
       <td className="px-6 py-4">
         <div className="flex gap-2">
           {product.color.map((e) => (

@@ -92,6 +92,9 @@ export default function AdminProducts() {
                     Giá gốc
                   </th>
                   <th scope="col" className="px-6 py-3 ">
+                    Số lượng
+                  </th>
+                  <th scope="col" className="px-6 py-3 ">
                     Màu sắc
                   </th>
                   <th scope="col" className="px-6 py-3 ">

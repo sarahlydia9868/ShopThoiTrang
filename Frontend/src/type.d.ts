@@ -49,10 +49,12 @@ declare global {
 
   // Order
   interface OrderModel {
-    _id?: Types.ObjectId;
+    _id: Types.ObjectId;
     user: Types.ObjectId;
     cartItems: CartItem[];
     shippingAddress: ShippingAddress;
+    shippingMethod: number;
+    paymentURL?: string;
     totalPrice: number;
     isPaid: boolean;
     progress: string;

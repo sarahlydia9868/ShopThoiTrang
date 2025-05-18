@@ -12,6 +12,9 @@ declare global {
       SMPT_SERVICE: string;
       SMPT_MAIL: string;
       SMPT_PASSWORD: string;
+      VNP_TMNCODE: string;
+      VNP_HASHSECRET: string;
+      VNP_URL: string;
     }
   }
   

@@ -52,7 +52,6 @@ export const getOrderDetails = (id: string) => async (dispatch: (arg0: { type: O
       },
     };
     const { data } = await axios.post(`/api/orders/get`, { id }, config);
-    console.log(data);
     dispatch({ type: OrderConstants.ORDER_DETAILS_SUCCESS, payload: data.data, message: data.message });
   } catch (error: any) {
     dispatch({
@@ -114,6 +113,26 @@ export const sendOrderMail = (userID: string, title: string, content: string) =>
   } catch (error: any) {
     dispatch({
       type: OrderConstants.ORDER_MAIL_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Create request payment orders
+export const createPaymentOrder = (amount: number, orderID: string, returnUrl: string) => async (dispatch: (arg0: { type: OrderConstants; payload?: OrderModel; message?: string }) => void) => {
+  try {
+    dispatch({ type: OrderConstants.PAY_ORDER_REQUEST });
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post(`/api/orders/create-payment`, {amount, orderID, returnUrl}, config);
+    dispatch({ type: OrderConstants.PAY_ORDER_SUCCESS, payload: data.data,  message: data.message });
+  } catch (error: any) {
+    dispatch({
+      type: OrderConstants.PAY_ORDER_FAIL,
       payload: error.response.data.message,
     });
   }

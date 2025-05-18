@@ -20,6 +20,7 @@ const reducer = combineReducers({
   deleteProduct: productReducers.deleteProduct,
   allOrders: orderReducers.allOrders,
   updateOrder: orderReducers.updateOrder,
+  payOrder: orderReducers.payOrder,
   allUsers: authReducers.allUsers,
   deleteReview: productReducers.deleteReview,
   productReviews: productReducers.productReviews,

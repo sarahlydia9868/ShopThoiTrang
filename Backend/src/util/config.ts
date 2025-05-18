@@ -17,7 +17,10 @@ function parseConfig() {
         SMPT_PORT: process.env.SMPT_PORT,
         SMPT_SERVICE: process.env.SMPT_SERVICE,
         SMPT_MAIL: process.env.SMPT_MAIL,
-        SMPT_PASSWORD: process.env.SMPT_PASSWORD
+        SMPT_PASSWORD: process.env.SMPT_PASSWORD,
+        VNP_TMNCODE: process.env.VNP_TMNCODE,
+        VNP_HASHSECRET: process.env.VNP_HASHSECRET,
+        VNP_URL: process.env.VNP_URL,
     };
 }
 
