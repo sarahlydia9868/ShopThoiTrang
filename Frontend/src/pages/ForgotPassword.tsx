@@ -127,7 +127,7 @@ export default function ForgotPassword() {
                 <>
                   <div className=" w-full flex justify-center items-center flex-col gap-5">
                     <span className="">Vui lòng kiểm tra email của bạn để biết tin nhắn có mã của bạn. Mã của bạn gồm 6 số.</span>
-                    <FormInput label="Mã xác thực" value={""} type="number" placeholder="Nhập mã xác thực" onChange={(e) => setCode(e.target.value)} />
+                    <FormInput label="Mã xác thực" type="number" placeholder="Nhập mã xác thực" onChange={(e) => setCode(e.target.value)} />
                   </div>
                   <div className="flex justify-evenly items-center flex-wrap gap-3 w-full">
                     <div onClick={verifyCodeSumbit}>

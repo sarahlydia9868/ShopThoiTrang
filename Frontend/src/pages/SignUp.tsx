@@ -14,23 +14,26 @@ import ToastAlert from "../components/modules/ToastAlert";
 
 export default function SignUp() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const [code, setCode] = useState<number>(0);
   const [loginUserName, setLoginUserName] = useState<string>("");
   const [loginEmail, setLoginEmail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [toastAlertText, setToastAlertText] = useState<string>("");
-  const [isSendCodeOK, setSendCodeOK] = useState<boolean>(false);
-  const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
   const [isToastAlertOK, setIsToastAlertOK] = useState<boolean>(false);
+  const [openToastAlert, setOpenToastAlert] = useState<boolean>(false);
+  const [isSendCodeOK, setSendCodeOK] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  const { error, message, isAuthenticated, isCheckSignUpOk } = useSelector((state: RootState) => state.user);
+  const { error: profileError, message: profileMessage, isVerifyCoded } = useSelector((state: RootState) => state.profile);
 
-  const submit = (e: any) => {
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(checkRegister(loginUserName, loginEmail, loginPassword));
-  }
+  };
 
-  const verifyCodeSumbit = (e: any) => {
+  const verifyCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (`${code}`.length !== 6) {
       dispatch({
@@ -42,65 +45,43 @@ export default function SignUp() {
     dispatch(verifyCode(loginEmail, code));
   };
 
-  // const signUpSubmit = (e: any) => {
-  //   e.preventDefault();
-  //   dispatch(register(loginUserName, loginEmail, loginPassword));
-  // };
-
-  const { error, loading, isAuthenticated, isCheckSignUpOk, message } = useSelector((state: RootState) => state.user);
-  const profileState = useSelector((state: RootState) => state.profile);
-  const isSendCoded = profileState.isSendCoded;
-  const profileMessage = profileState.message;
-  const profileError = profileState.error;
-  const  isVerifyCoded = profileState.isVerifyCoded;
+  useEffect(() => {
+    const err = profileError || error;
+    const msg = profileMessage || message;
+    if (err || msg) {
+      dispatch(clearErrors());
+      setIsToastAlertOK(!err);
+      setToastAlertText(msg!);
+      setOpenToastAlert(true);
+      const id = setTimeout(() => setOpenToastAlert(false), 3000);
+      return () => clearTimeout(id);
+    }
+  }, [dispatch, profileError, profileMessage, error, message]);
 
   useEffect(() => {
-    if (profileError && profileMessage) {
-      dispatch(clearErrors());
-      setIsToastAlertOK(false);
-      setToastAlertText(profileMessage!);
-      setOpenToastAlert(!openToastAlert);
-      setTimeout(() => {
-        setOpenToastAlert(false);
-      }, 3000);
-    }
-
-    if (error && message) {
-      dispatch(clearErrors());
-      setIsToastAlertOK(false);
-      setToastAlertText(message!);
-      setOpenToastAlert(!openToastAlert);
-      setTimeout(() => {
-        setOpenToastAlert(false);
-      }, 3000);
-    }
-
-    if (isCheckSignUpOk && message) {
+    if (isCheckSignUpOk) {
       setIsToastAlertOK(true);
       setToastAlertText(message!);
-      setOpenToastAlert(!openToastAlert);
+      setOpenToastAlert(true);
       setSendCodeOK(true);
-      setTimeout(() => {
-        setOpenToastAlert(false);
-      }, 3000);
     }
-    
+  }, [isCheckSignUpOk, message]);
 
-    if (isVerifyCoded && profileMessage) {
+  useEffect(() => {
+    if (isVerifyCoded) {
       dispatch(register(loginUserName, loginEmail, loginPassword));
-      setTimeout(() => {
-      }, 3000);
     }
+  }, [dispatch, isVerifyCoded, loginUserName, loginEmail, loginPassword]);
 
+  useEffect(() => {
     if (isAuthenticated) {
       setIsToastAlertOK(true);
       setToastAlertText(message!);
-      setOpenToastAlert(!openToastAlert);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      setOpenToastAlert(true);
+      setTimeout(() => navigate("/"), 1000);
     }
-  }, [dispatch, error, loading, isAuthenticated, isSendCoded, message, profileMessage, isVerifyCoded, isCheckSignUpOk, profileError]);
+  }, [isAuthenticated, message, navigate]);
+
   return (
     <>
       <div className="flex flex-col h-screen justify-between">
@@ -154,10 +135,10 @@ export default function SignUp() {
                 <>
                   <div className=" w-full flex justify-center items-center flex-col gap-5">
                     <span className="">Vui lòng kiểm tra email của bạn để biết tin nhắn có mã của bạn. Mã của bạn gồm 6 số.</span>
-                    <FormInput label="Mã xác thực" value={""} type="number" placeholder="Nhập mã xác thực" onChange={(e) => setCode(e.target.value)} />
+                    <FormInput label="Mã xác thực" type="number" placeholder="Nhập mã xác thực" onChange={(e) => setCode(e.target.value)} />
                   </div>
                   <div className="flex justify-evenly items-center flex-wrap gap-3 w-full">
-                    <div onClick={verifyCodeSumbit}>
+                    <div onClick={verifyCodeSubmit}>
                       <Button padding="px-8 py-3" text="Xác nhận" bgColor="black" />
                     </div>
                   </div>

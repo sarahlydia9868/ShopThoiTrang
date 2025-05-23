@@ -90,6 +90,17 @@ export const checkRegister = asyncHandler(async (req: any, res: Response) => {
 export const register = asyncHandler(async (req: any, res: Response) => {
   const { username, email, password } = req.body;
 
+  if (await User.findOne({ username })) {
+    res.status(500).json({ message: "Tên đăng nhập đã được xử dụng" });
+    return;
+  }
+
+  if (await User.findOne({ email })) {
+    res.status(500).json({ message: "Email đã được xử dụng" });
+    return;
+  }
+
+
 
   const name = username;
   const address: ShippingAddress[] = [];
