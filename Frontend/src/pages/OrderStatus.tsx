@@ -5,7 +5,7 @@ import NavBar from "../components/NavBar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../redux/store";
-import { updateOrder } from "../actions/order";
+import { clearErrors, updateOrder } from "../actions/order";
 export default function OrderStatus() {
   const { orderID } = useParams();
   const [searchParams] = useSearchParams();
@@ -19,9 +19,10 @@ export default function OrderStatus() {
       dispatch(updateOrder(orderID!, "Đã huỷ"));
     }
     else if (!transactionStatus) {
+      dispatch(clearErrors());
       navigate(`/`);
     }
-  }, [transactionStatus, updateOrder, orderID]);
+  }, [transactionStatus, updateOrder, clearErrors, orderID]);
   return (
     <>
       <div className="flex flex-col min-h-screen">

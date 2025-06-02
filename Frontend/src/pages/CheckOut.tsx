@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import ToastAlert from "../components/modules/ToastAlert";
-import { clearErrors, createOrder, createPaymentOrder } from "../actions/order";
+import { createOrder, createPaymentOrder } from "../actions/order";
 import { updateItems } from "../actions/user";
 import TopUp from "../components/modules/TopUp";
 
@@ -53,10 +53,8 @@ export default function CheckOut() {
       window.location.replace(url);
     }
   }, [dispatch, paymentSuccess, url]);
-
   useEffect(() => {
     if (success && message) {
-      dispatch(clearErrors());
       dispatch(updateItems(user?._id, [], user?.wishList!));
       if (payment === "Thanh toán qua VNPay") {
         dispatch(createPaymentOrder(order!.totalPrice, order!._id, `${window.location.origin}/account/order-status/${order?._id}`));
