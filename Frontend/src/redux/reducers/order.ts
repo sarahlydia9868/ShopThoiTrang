@@ -33,6 +33,7 @@ const newOrder = (state = {}, action: { type: OrderConstants; payload?: OrderMod
     case OrderConstants.CLEAR_ERRORS:
       return {
         ...state,
+        success: false,
         error: false,
       };
 
