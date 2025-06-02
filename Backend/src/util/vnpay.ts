@@ -5,7 +5,7 @@ const vnpay = new VNPay({
     tmnCode: config.VNP_TMNCODE,
     secureSecret: config.VNP_HASHSECRET,
     vnpayHost: 'https://sandbox.vnpayment.vn',
-    testMode: true,
+    testMode: false,
     hashAlgorithm: HashAlgorithm.SHA512,
     loggerFn: ignoreLogger,
 });

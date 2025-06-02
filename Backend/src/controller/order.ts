@@ -64,8 +64,8 @@ export const payOrder = asyncHandler(async (req: Request, res: Response) => {
 export const createPaymentOrder = asyncHandler(async (req: Request, res: Response) => {
   try {
     const { amount, orderID, returnUrl } = req.body;
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const now = new Date();
+    const thirtyMinutesLater = new Date(now.getTime() + 30 * 60 * 1000);
     
     const paymentUrl = vnpay.buildPaymentUrl({
       vnp_Amount: amount,
@@ -75,8 +75,8 @@ export const createPaymentOrder = asyncHandler(async (req: Request, res: Respons
       vnp_OrderType: ProductCode.Fashion,
       vnp_ReturnUrl: returnUrl,
       vnp_Locale: VnpLocale.VN,
-      vnp_CreateDate: dateFormat(new Date()),
-      vnp_ExpireDate: dateFormat(tomorrow),
+      vnp_CreateDate: dateFormat(now),
+      vnp_ExpireDate: dateFormat(thirtyMinutesLater),
     });
     res.status(200).json({
       message: "Đã tạo url thanh toán đơn hàng",
